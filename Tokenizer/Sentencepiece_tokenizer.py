@@ -7,7 +7,7 @@ import argparse
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description = 'Please input variables')
 
-    # Required parameter top k
+    # Required parameter
     parser.add_argument(
         "--input",
         type=str,
@@ -29,7 +29,7 @@ if __name__ == "__main__":
 
     parser.add_argument(
         "--character_coverage",
-        default= 0.9995,
+        default= 0.9999,
         type=int,
         required=False,
     )
@@ -65,5 +65,6 @@ cmd = input_argument%(args.input, sp_model_path, vocab_size, user_defined_symbol
 
 
 # Train Tokenizer
-spm.SentencePieceTrainer.Train(cmd)
+trained_vocab = spm.SentencePieceTrainer.Train(cmd)
+
 print('Train Finished!')
