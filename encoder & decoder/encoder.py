@@ -46,8 +46,13 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
 sp = spm.SentencePieceProcessor()
+
+with open ("/home/chanhwi/workspace/Transformer_Reimplementation/Tokenizer/tokenized_sp_train_en/tokenized_%s.model" % (args.model_name), "r") as f:
+    txt = f.read()
+
 vocab_file = "/home/chanhwi/workspace/Transformer_Reimplementation/Tokenizer/tokenized_sp_train_en/tokenized_%s.model" % (args.model_name)
-sp.load(vocab_file)
+sp.load(txt)
 
 
-encoded_corpus = sp.encode_as_ids(args.input)
+encoded_corpus = sp.encode_as_pieces(txt)
+print(encoded_corpus)
