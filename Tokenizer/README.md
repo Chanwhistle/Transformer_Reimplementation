@@ -2,16 +2,15 @@
 
 '''
 
-
 $ python Sentencepiece_tokenizer \
 
-    --input                   path of input data \
-    --model_name              name of model \
+    --corpus_name             file name of corpus data \
 
 optional arguments:
-    --vocab_size              number of vocab size \
-    --character_coverage      put float number between [0,1] \
-    --model_type              type of model \
-
+    --save_dir                directory for trained file \
+    --dataset_dir             directory for dataset file \
+    --vocab_size              number of vocabulary size (8000, 16000, 32000) \
+    --character_coverage      rate of character coverage. small dataset performs well at 1 [0,1] \
+    --model_type              type of model (unigram, bpe, char, word) \
 
 '''
