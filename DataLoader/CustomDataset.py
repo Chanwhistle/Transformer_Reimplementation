@@ -6,11 +6,11 @@ from torch.utils.data import Dataset
 
 class CustomDataset(Dataset):
     def __init__(self):
-        f1 = open ("../dataset/train.en", "r", encoding="utf-8")
+        f1 = open ("../Transformer_Reimplementation/dataset/train.en", "r", encoding="utf-8")
         en_data = f1.readlines()
         self.en_data = en_data
         
-        f2 = open ("../dataset/train.de", "r", encoding="utf-8")
+        f2 = open ("../Transformer_Reimplementation/dataset/train.de", "r", encoding="utf-8")
         de_data = f2.readlines()
         self.de_data = de_data        
 

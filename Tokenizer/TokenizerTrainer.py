@@ -49,7 +49,6 @@ if __name__ == "__main__":
         required=False,
     )
 
-    
     args = parser.parse_args()
 
 
@@ -75,9 +74,10 @@ if not os.path.isdir(save_dir):
 model_path = os.path.join(save_dir, model_name)
 
 input_argument = '--input=%s%s --model_prefix=%s --vocab_size=%s --user_defined_symbols=%s --model_type=%s --character_coverage=%s'
-cmd = input_argument%(dataset_dir, corpus_name, model_path, vocab_size, user_defined_symbols, model_type, character_coverage)
+StpToken = input_argument%(dataset_dir, corpus_name, model_path, vocab_size, user_defined_symbols, model_type, character_coverage)
+
 
 # Train Tokenizer
-trained_vocab = spm.SentencePieceTrainer.Train(cmd)
+trained_vocab = spm.SentencePieceTrainer.Train(StpToken)
 
-print('Tokenizing Finished!')
+print('Training Finished!')

@@ -3,21 +3,16 @@
 # Load StpTokenizer models
 import argparse
 import os
-import sys
-sys.path.append('../dataset/')
-
 import torch
-from Customataset import CustomDataset
+from torch.utils.data import Dataset
+from DataLoader.CustomDataset import CustomDataset
 from torch.utils.data import DataLoader
-from torch.nn.utils.rnn import pad_sequence
-
 
 # set variables
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description = 'Please input variables')
 
     # Required parameter
-
     parser.add_argument(
         "--batch_size",
         default = 128,
@@ -43,7 +38,7 @@ def my_collate_fn(dataset):
 
 dataloader = DataLoader(
     dataset, 
-    batch_size = args.batch_size, 
+    batch_size = 128,
     shuffle = False, 
     collate_fn = my_collate_fn
 )
