@@ -78,7 +78,7 @@ class CustomDataset(Dataset):
         SPP_en.Load(model_file = 
             "Tokenizer/models/tokenized_IWSLT_2016.en_32000/tokenized_IWSLT_2016.en_32000.model")
         for lines in en_list:
-            tokenized_lines_en.append(SPP_en.EncodeAsIds(lines))
+            tokenized_lines_en.append(SPP_en.EncodeAsPieces(lines))
         
         max_len = max(len(item) for item in tokenized_lines_en)
                    
@@ -97,7 +97,7 @@ class CustomDataset(Dataset):
         SPP_de.Load(model_file = 
             "Tokenizer/models/tokenized_IWSLT_2016.de_32000/tokenized_IWSLT_2016.de_32000.model")
         for lines in de_list:
-            tokenized_lines_de.append(SPP_de.EncodeAsIds(lines))     
+            tokenized_lines_de.append(SPP_de.EncodeAsPieces(lines))     
         
         max_len = max(len(item) for item in tokenized_lines_de)
         
@@ -161,37 +161,12 @@ class CustomDataset(Dataset):
 dataset = CustomDataset()
 
 dataloader = DataLoader(
-    dataset, 
+    dataset,
     batch_size = 128, # argparse 사용 예정
-    shuffle = False, 
+    shuffle = True, 
 )
 
 for i, batch in enumerate(dataloader): # batch[0]에는 en_list가 들어가고 batch[1]에는 de_list가 들어감
-    print(batch[0].int())
-    print(batch[1].int())
-
-
-
-
-
-
-
-
-# a = dataset.en_list[:5]
-# b = []
-# for x in a:
-#     for k in x:
-#         b.append(int(k))
-# SPP_en = sp.SentencePieceProcessor()
-# SPP_en.Load(model_file = "Tokenizer/models/tokenized_IWSLT_2016.en_32000/tokenized_IWSLT_2016.en_32000.model")
-# print(SPP_en.DecodeIds(b))
-
-
-# c = dataset.de_list[:5]
-# d = []
-# for x in c:
-#     for k in x:
-#         d.append(int(k))
-# SPP_de = sp.SentencePieceProcessor()
-# SPP_de.Load(model_file = "Tokenizer/models/tokenized_IWSLT_2016.de_32000/tokenized_IWSLT_2016.de_32000.model")
-# print(SPP_de.DecodeIds(d))
+    print(f"{i+1}번째 en_batch", batch[0].int())
+    print(f"{i+1}번째 de_batch", batch[1].int())
+    break
