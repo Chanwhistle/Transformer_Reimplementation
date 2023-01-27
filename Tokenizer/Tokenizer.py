@@ -30,7 +30,7 @@ if __name__ == "__main__":
     
     parser.add_argument(
         "--vocab_size",
-        default='  ',
+        default= 32000,
         type=int,
         required=False,
     )
