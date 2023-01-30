@@ -65,56 +65,6 @@ from torchtext.vocab import *
     
 #     args = parser.parse_args()
 
-# Custom dataset
-
-class CustomDataset(Dataset):
-    def __init__(self):
-        SPP_en = sp.SentencePieceProcessor()
-        with open ("../Transformer_Reimplementation/dataset/IWSLT_2016.en", "r", encoding="utf-8") as f1:
-            en_list = f1.read().splitlines()
-            
-        tokenized_lines_en = []
-        
-        SPP_en.Load(model_file = 
-            "Tokenizer/models/tokenized_IWSLT_2016.en_32000/tokenized_IWSLT_2016.en_32000.model")
-        for lines in en_list:
-            tokenized_lines_en.append(SPP_en.EncodeAsPieces(lines))
-        
-        max_len = max(len(item) for item in tokenized_lines_en)
-                   
-        for line in tokenized_lines_en:
-            while len(line) < max_len:
-                line.append(3)
-        self.en_list = tokenized_lines_en
-        
-        
-        SPP_de = sp.SentencePieceProcessor()
-        with open ("../Transformer_Reimplementation/dataset/IWSLT_2016.de", "r", encoding="utf-8") as f2:
-            de_list = f2.read().splitlines() 
-            
-        tokenized_lines_de = []
-        
-        SPP_de.Load(model_file = 
-            "Tokenizer/models/tokenized_IWSLT_2016.de_32000/tokenized_IWSLT_2016.de_32000.model")
-        for lines in de_list:
-            tokenized_lines_de.append(SPP_de.EncodeAsPieces(lines))     
-        
-        max_len = max(len(item) for item in tokenized_lines_de)
-        
-        for line in tokenized_lines_de:
-            while len(line) < max_len:
-                line.append(3)
-        self.de_list = tokenized_lines_de
-
-    def __len__(self):
-        return len(self.en_list)
-
-    def __getitem__(self,idx):
-        en = torch.FloatTensor(self.en_list[idx])
-        de = torch.FloatTensor(self.de_list[idx])
-        return en, de
-
-
     
     # def build_vocab(Stp_de, Stp_en):
         
@@ -158,11 +108,114 @@ class CustomDataset(Dataset):
     #     print(len(vocab_tgt))
     #     return vocab_src, vocab_tgt
 
-dataset = CustomDataset()
+
+
+
+
+class IWSLTDataset(Dataset):
+    def __init__(self, datapath = "./dataset/", src_lang = "de", trg_lang = "en", type = "train"):
+        super().__init__()
+        
+        SP = sp.SentencePieceProcessor()
+        
+        if type == "train":
+            datasets = ["IWSLT16"]
+            trg = []
+            src = []
+            for dataset in datasets:
+                trg_path = os.path.join(datapath, type, f"{type}.{trg_lang}")
+                src_path = os.path.join(datapath, type, f"{type}.{src_lang}")
+                with open(trg_path, encoding = "utf-8") as f:
+                    temp_trg = f.read().splitlines()
+                with open(src_path, encoding = "utf-8") as f:
+                    temp_src = f.read().splitlines()
+                trg += temp_trg
+                src += temp_src
+                   
+            self.trg_tok_list = self.tokenize("en_32000", SP, trg)
+            self.src_tok_list = self.tokenize("de_32000", SP, src)
+                       
+        elif type == "tst" or type == "dev":
+            type = "tst"
+            datasets = ["IWSLT16.TED.tst2014", "IWSLT16.TED.tst2013", "IWSLT16.TED.tst2012", "IWSLT16.TED.tst2011", "IWSLT16.TED.tst2010"]
+            trg = []
+            src = []
+            for dataset in datasets:
+                trg_path = os.path.join(datapath, type, f"{dataset}.{src_lang}-{trg_lang}.{trg_lang}.xml")
+                src_path = os.path.join(datapath, type, f"{dataset}.{src_lang}-{trg_lang}.{src_lang}.xml")
+                with open(trg_path, encoding = "utf-8") as f:
+                    temp_trg = f.read().splitlines()
+                with open(src_path, encoding = "utf-8") as f:
+                    temp_src = f.read().splitlines()
+                assert(len(temp_src) == len(temp_trg))
+                trg += temp_trg
+                src += temp_src
+                
+            self.trg_tok_list = self.tokenize("en_32000", self.tokenizer(model="en_32000"), trg)
+            self.src_tok_list = self.tokenize("de_32000", self.tokenizer(model="de_32000"), src)
+                
+            type = "dev"
+            datasets = ["IWSLT16.TED.dev2012", "IWSLT16.TED.dev2010"]
+            trg = []
+            src = []
+            for dataset in datasets:
+                trg_path = os.path.join(datapath, type, f"{dataset}.{src_lang}-{trg_lang}.{trg_lang}.xml")
+                src_path = os.path.join(datapath, type, f"{dataset}.{src_lang}-{trg_lang}.{src_lang}.xml")
+                with open(trg_path, encoding = "utf-8") as f:
+                    temp_trg = f.read().splitlines()
+                with open(src_path, encoding = "utf-8") as f:
+                    temp_src = f.read().splitlines()
+                assert(len(temp_trg) == len(temp_src))
+                trg += temp_trg
+                src += temp_src
+                
+            self.trg_tok_list = self.tokenize("en_32000", self.tokenizer(model="en_32000"), trg)
+            self.src_tok_list = self.tokenize("de_32000", self.tokenizer(model="de_32000"), src)
+        
+        self.src = src
+        self.trg = trg
+                
+    def __len__(self):
+        return len(self.src)
+
+    def __getitem__(self,idx):
+        en = torch.FloatTensor(self.trg_tok_list[idx])
+        de = torch.FloatTensor(self.src_tok_list[idx])
+        return en, de
+    
+    def tokenizer(self, model):
+        if model == "en_32000":
+            SP_en = sp.SentencePieceProcessor.Load(model_file = 
+            "Tokenizer/models/"f"{model}.model")
+            return SP_en
+            
+        elif model =="de_32000":
+            SP_de = sp.SentencePieceProcessor.Load(model_file = 
+            "Tokenizer/models/"f"{model}.model")
+            return SP_de
+
+        
+    def tokenize(self, model, tokenizer, vocab):
+        model_name = f"tokenized_IWSLT_2016.{model}"
+        tokenized = []      
+        tokenizer.Load(model_file = 
+            "Tokenizer/models/"f"{model_name}.model")
+        for lines in vocab:
+            tokenized.append(tokenizer.EncodeAsIds(lines))
+        
+        max_len = max(len(item) for item in tokenized)
+                
+        for line in tokenized:
+            while len(line) < max_len:
+                line.append(3)
+
+        return tokenized
+    
+dataset = IWSLTDataset()
 
 dataloader = DataLoader(
     dataset,
-    batch_size = 128, # argparse 사용 예정
+    batch_size = 32, # argparse 사용 예정
     shuffle = True, 
 )
 
