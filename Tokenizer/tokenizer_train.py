@@ -2,7 +2,6 @@ import sentencepiece as spm
 import os
 import argparse
 
-
 # set variables
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description = 'Please input variables')
