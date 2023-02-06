@@ -9,32 +9,32 @@ import sentencepiece as sp
 from tqdm import tqdm
 import pickle
 
-class IWSLTDataset(Dataset):
+class CustomDataset(Dataset):
     def __init__(self, src_lang = "de", trg_lang = "en", type = "train"):
         super().__init__()
 
         if type == "train":
             trg, src = self.load_vocab(type, src_lang, trg_lang)
-            self.trg_tok_list = self.tokenize(f"{trg_lang}_32000", trg)
-            self.src_tok_list = self.tokenize(f"{src_lang}_32000", src)
+            self.trg_tok_list = self.tokenize(f"{trg_lang}_32000", trg, type)
+            self.src_tok_list = self.tokenize(f"{src_lang}_32000", src, type)
 
 
         elif type == "tst":
             trg, src = self.load_vocab(type, src_lang, trg_lang)
-            self.trg_tok_list = self.tokenize(f"{trg_lang}_32000", trg)
-            self.src_tok_list = self.tokenize(f"{src_lang}_32000", src)
+            self.trg_tok_list = self.tokenize(f"{trg_lang}_32000", trg, type)
+            self.src_tok_list = self.tokenize(f"{src_lang}_32000", src, type)
 
 
         elif type == "dev":      
             trg, src = self.load_vocab(type, src_lang, trg_lang)
-            self.trg_tok_list = self.tokenize(f"{trg_lang}_32000", trg)
-            self.src_tok_list = self.tokenize(f"{src_lang}_32000", src)
+            self.trg_tok_list = self.tokenize(f"{trg_lang}_32000", trg, type)
+            self.src_tok_list = self.tokenize(f"{src_lang}_32000", src, type)
 
         else:
             raise TypeError ("Data type is wrong. Please check data type.")
         
         self.src = src
-        
+        self.type = type
 
     def __len__(self):
 
@@ -64,23 +64,23 @@ class IWSLTDataset(Dataset):
         return SP
 
 
-    def tokenize(self, model, vocab):
+    def tokenize(self, model, vocab, type):
         tokenized = []      
         tokenizer = self.tokenizer(model)
 
-        if os.path.isfile(f'./Tokenizer/EncodeAsIds_{model}.pickle') == False:
+        if os.path.isfile(f'./Tokenizer/EncodeAsIds_{model}_{type}.pickle') == False:
             print("Encoding As Id...") 
             for lines in tqdm(vocab):
                 tokenized_temp = tokenizer.EncodeAsIds(lines)
                 tokenized_temp.insert(0,4)        # insert [BOS]
                 tokenized_temp.append(5)          # insert [EOS]
                 tokenized.append(tokenized_temp)
-            with open(f'./Tokenizer/EncodeAsIds_{model}.pickle', 'wb') as f:
+            with open(f'./Tokenizer/EncodeAsIds_{model}_{type}.pickle', 'wb') as f:
                 pickle.dump(tokenized, f, pickle.HIGHEST_PROTOCOL)
         
         else:                
             print(f"Loading Encoded {model[:2]} file!")
-            with open(f'./Tokenizer/EncodeAsIds_{model}.pickle', 'rb') as f:
+            with open(f'./Tokenizer/EncodeAsIds_{model}_{type}.pickle', 'rb') as f:
                 tokenized = pickle.load(f)
         
         print(f"{model[:2]}_vocab tokenizing Finished!")
@@ -139,7 +139,7 @@ class IWSLTDataset(Dataset):
 
 
 
-dataset = IWSLTDataset()
+dataset = CustomDataset()
 print("Dataset Loaded")
 
 def my_collate_fn(samples):
