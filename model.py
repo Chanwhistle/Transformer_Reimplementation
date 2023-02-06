@@ -12,9 +12,10 @@ Output = Tensor
 '''
 
 import torch
-from torch import nn
+import torch.nn as nn
 import numpy as np
 import math
+import copy
 
 
 '''
@@ -119,7 +120,7 @@ class MultiHeadAttention(nn.Module):
         split tensor by number of head
         
         input = [batch_size, length, d_model]
-        output = [batch_size, head, length, d_model]
+        output = [batch_size, head, length, d_tensor]
         
         d_model = head * d_tensor
         '''
@@ -135,7 +136,7 @@ class MultiHeadAttention(nn.Module):
         '''
         Inverse function of self.split
         
-        input = [batch_size, head, length, d_model]
+        input = [batch_size, head, length, d_tensor]
         output = [batch_size, length, d_model]
         '''
         batch_size, head, length, d_tensor = tensor.size()
@@ -174,9 +175,7 @@ class LayerNorm(nn.Module):
     def forward(self, x):
         mean = x.mean(-1, keepdim = True)
         std = x.std(-1, keepdim = True)
-        
-        out = (x-mean)/(std+self.eps)
-        out = self.gamma * out + self.beta
+        out = self.gamma * (x-mean)/(std+self.eps) + self.beta
         return out
     
     
@@ -191,7 +190,7 @@ class PositionwiseFeedForward(nn.Module):
         self.linear1 = nn.Linear(d_model, hidden)
         self.linear2 = nn.Linear(hidden, d_model)
         self.relu = nn.ReLU()
-        self.dropout = nn.Dropout(p = drop_prob)
+        self.dropout = nn.Dropout(drop_prob)
         
     def forward(self, x):
         x = self.linear1(x)
@@ -200,3 +199,51 @@ class PositionwiseFeedForward(nn.Module):
         x = self.linear2(x)
         return x
 
+
+
+def clones(module, N):
+    "Produce N identical layers."
+    return nn.ModuleList([copy.deepcopy(module) for _ in range(N)])
+
+
+class SublayerConnection(nn.Module):
+    """
+    A residual connection followed by a layer norm.
+    Note for code simplicity the norm is first as opposed to last.
+    """
+
+    def __init__(self, size, dropout):
+        super(SublayerConnection, self).__init__()
+        self.norm = LayerNorm(size)
+        self.dropout = nn.Dropout(dropout)
+
+    def forward(self, x, sublayer):
+        "Apply residual connection to any sublayer with the same size."
+        return x + self.dropout(sublayer(self.norm(x)))
+
+class Encoder(nn.Module):
+    def __init__(self, layer, N):
+        pass
+    pass
+
+class EncoderLayer(nn.Module):
+    def __init__(self, size, self_attn, feed_forward, dropout):
+        super(EncoderLayer, self).__init__()
+        self.self_attn = self_attn
+        self.feed_forward = feed_forward
+        self.sublayer = clones(SublayerConnection(size, dropout), 2)
+        self.size = size
+
+class Decoder(nn.Module):
+    def __init__(self, layer, N):
+        pass
+    pass
+
+class DecoderLayer(nn.Module):
+    def __init__(self, size, self_attn, src_attn, feed_forward, dropout):
+        super(DecoderLayer, self).__init__()
+        self.size = size
+        self.self_attn = self_attn
+        self.src_attn = src_attn
+        self.feed_forward = feed_forward
+        self.sublayer = clones(SublayerConnection(size, dropout), 3)
