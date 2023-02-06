@@ -1,12 +1,25 @@
 # Preprocessing
 
 import sys
-import torch
-from DataLoader.CustomDataset import CustomDataset
-from DataLoader.DataLoader import *
-from Tokenizer.Tokenizer import *
-from torchtext.data import Field # torchtext == 0.6.0
 import argparse
+import os
+from os.path import exists
+import math
+import copy
+import time
+import pandas as pd
+import torch
+import torch.nn as nn
+from torch.nn.functional import log_softmax, pad
+from torch.optim.lr_scheduler import LambdaLR
+from torch.utils.data import DataLoader
+from torchtext.vocab import build_vocab_from_iterator
+import warnings
+from torch.utils.data.distributed import DistributedSampler
+import torch.distributed as dist
+import torch.multiprocessing as mp
+from torch.nn.parallel import DistributedDataParallel as DDP
+from . import model
 
 # set variables
 if __name__ == "__main__":
@@ -22,49 +35,3 @@ if __name__ == "__main__":
     
     args = parser.parse_args()
 
-
-StpTokenizer = Stp()
-
-def StpTokenize_en(en_text_list):
-    Stp_en = StpTokenizer.Load(model_file = "Tokenizer/models/tokenized_train.en_32000/tokenized_train.en_32000.model")
-    Stp_en = StpTokenizer.Encode(en_text_list)
-    return [token for token in Stp_en]
-    
-def StpTokenize_de(de_text_list):
-    Stp_de = StpTokenizer.Load(model_file = "Tokenizer/models/tokenized_train.de_32000/tokenized_train.de_32000.model")
-    Stp_de = StpTokenizer.Encode(de_text_list)
-    return [token for token in Stp_de]
-
-StpTokenizer = Stp()
-if args.lang == "en":
-    Stp_en = StpTokenizer.Load(model_file = "Tokenizer/models/tokenized_train.en_32000/tokenized_train.en_32000.model")
-
-elif args.lang == "de":
-    Stp_de = StpTokenizer.Load(model_file = "Tokenizer/models/tokenized_train.de_32000/tokenized_train.de_32000.model")
-
-
-SRC = Field(tokenize = StpTokenize_en, 
-            init_token = "<sos>", 
-            eos_token = "<eos>", 
-            lower = True, 
-            batch_first = True
-            )
-
-TRG = Field(tokenize = StpTokenize_de, 
-            init_token = "<sos>", 
-            eos_token = "<eos>", 
-            lower = True, 
-            batch_first = True
-            )
-
-
-# print(StpTokenize_en(dataset.en_data[:1]))
-# print(StpTokenize_de(dataset.en_data[:1]))
-
-# print(StpTokenizer.Decode(StpTokenize_en(dataset.en_data[:1])))
-# print(StpTokenizer.Decode(StpTokenize_de(dataset.de_data[:1])))
-
-# for i, token in enumerate (StpTokenize_en(dataset.en_data[:5])):
-#     print(f"인덱스 {i} : {token}")
-       
-       
