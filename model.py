@@ -201,9 +201,9 @@ class PositionwiseFeedForward(nn.Module):
 
 
 
-def clones(module, N):
+def clones(module, n_layers):
     "Produce N identical layers."
-    return nn.ModuleList([copy.deepcopy(module) for _ in range(N)])
+    return nn.ModuleList([copy.deepcopy(module) for _ in range(n_layers)])
 
 
 class SublayerConnection(nn.Module):
@@ -221,23 +221,44 @@ class SublayerConnection(nn.Module):
         "Apply residual connection to any sublayer with the same size."
         return x + self.dropout(sublayer(self.norm(x)))
 
+
 class Encoder(nn.Module):
-    def __init__(self, layer, N):
-        pass
-    pass
+    "Core encoder is a stack of N layers"
+
+    def __init__(self, layer, n_layers):
+        super(Encoder, self).__init__()
+        self.layers = clones(layer, n_layers)
+        self.norm = LayerNorm(layer.size)
+
+    def forward(self, x, mask):
+        "Pass the input (and mask) through each layer in turn."
+        for layer in self.layers:
+            x = layer(x, mask)
+        return self.norm(x)
+
 
 class EncoderLayer(nn.Module):
     def __init__(self, size, self_attn, feed_forward, dropout):
         super(EncoderLayer, self).__init__()
         self.self_attn = self_attn
         self.feed_forward = feed_forward
-        self.sublayer = clones(SublayerConnection(size, dropout), 2)
+        self.sublayer = clones(SublayerConnection(size, dropout), 6)
         self.size = size
 
+
 class Decoder(nn.Module):
-    def __init__(self, layer, N):
-        pass
-    pass
+    "Generic N layer decoder with masking."
+
+    def __init__(self, layer, n_layers):
+        super(Decoder, self).__init__()
+        self.layers = clones(layer, n_layers)
+        self.norm = LayerNorm(layer.size)
+
+    def forward(self, x, memory, src_mask, tgt_mask):
+        for layer in self.layers:
+            x = layer(x, memory, src_mask, tgt_mask)
+        return self.norm(x)
+
 
 class DecoderLayer(nn.Module):
     def __init__(self, size, self_attn, src_attn, feed_forward, dropout):
@@ -246,4 +267,4 @@ class DecoderLayer(nn.Module):
         self.self_attn = self_attn
         self.src_attn = src_attn
         self.feed_forward = feed_forward
-        self.sublayer = clones(SublayerConnection(size, dropout), 3)
+        self.sublayer = clones(SublayerConnection(size, dropout), 6)
