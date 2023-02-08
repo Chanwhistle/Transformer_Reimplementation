@@ -1,1 +1,4 @@
 *.pickle
+Tokenizer/EncodeAsIds_de_32000_dev.pickle
+Tokenizer/EncodeAsIds_en_32000_dev.pickle
+
