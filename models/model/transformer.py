@@ -1,6 +1,8 @@
 '''
 Transformer
 '''
+
+import torch.nn as nn
         
 class Transformer(nn.Module):
     def __init__(self, src_embed, trg_embed, encoder, decoder, generator):

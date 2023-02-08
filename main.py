@@ -1,4 +1,4 @@
-
+import yaml
 import os, sys, time
 import logging
 
@@ -11,8 +11,23 @@ from Dataloader import CustomDataset
 from utils import get_bleu_score, greedy_decode
 
 
-DATASET = CustomDataset()
 
+with open('config.yaml') as f:
+    conf = yaml.load(f)
+    
+DEVICE = conf['DEVICE']
+CHECKPOINT_DIR = conf['CHECKPOINT_DIR']
+N_EPOCH = conf['N_EPOCH']
+BATCH_SIZE = conf['BATCH_SIZE']
+NUM_WORKERS = conf['NUM_WORKERS']
+LEARNING_RATE = conf['LEARNING_RATE']
+WEIGHT_DECAY = conf['WEIGHT_DECAY']
+ADAM_EPS = conf['ADAM_EPS']
+SCHEDULER_FACTOR = conf['SCHEDULER_FACTOR']
+SCHEDULER_PATIENCE = conf['SCHEDULER_PATIENCE']
+WARM_UP_STEP = conf['WARM_UP_STEP']
+DROPOUT_RATE = conf['DROPOUT_RATE']
+DATASET = CustomDataset()
 
 def train(model, data_loader, optimizer, criterion, epoch, checkpoint_dir):
     model.train()
