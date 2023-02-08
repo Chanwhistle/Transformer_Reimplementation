@@ -59,19 +59,16 @@ vocab_size = args.vocab_size
 model_type = args.model_type
 character_coverage = args.character_coverage
 dataset_dir = args.dataset_dir
-model_name = f"{corpus_name[:2]}_{vocab_size}"
+model_name = f"{corpus_name[-2:]}_{vocab_size}"
 save_dir = args.save_dir + model_name
-
-user_defined_symbols = '[PAD],[BOS],[EOS],[CLS],[SEP],[MASK],'
-user_defined_symbols += '[UNK0],[UNK1],[UNK2],[UNK3],[UNK4],[UNK5],[UNK6],[UNK7],[UNK8],[UNK9]'
 
 if not os.path.isdir(save_dir):
     os.mkdir(save_dir)
 
 model_path = os.path.join(save_dir, model_name)
 
-input_argument = '--input=%s%s --model_prefix=%s --vocab_size=%s --user_defined_symbols=%s --model_type=%s --character_coverage=%s'
-input = input_argument % (dataset_dir, corpus_name, model_path, vocab_size, user_defined_symbols, model_type, character_coverage)
+input_argument = '--input=%s%s --model_prefix=%s --vocab_size=%s, --model_type=%s --character_coverage=%s, --pad_id=3, --pad_piece=<pad>'
+input = input_argument % (dataset_dir, corpus_name, model_path, vocab_size, model_type, character_coverage)
 
 # Train Tokenizer
 trained_vocab = Stp_trainer.Train(input)
