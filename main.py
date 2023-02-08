@@ -10,8 +10,6 @@ from models.build_model import build_model
 from Dataloader import CustomDataset
 from utils import get_bleu_score, greedy_decode
 
-
-
 with open('config.yaml') as f:
     conf = yaml.load(f)
     
