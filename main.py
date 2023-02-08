@@ -93,7 +93,7 @@ def main():
 
     criterion = nn.CrossEntropyLoss(ignore_index=DATASET.pad_idx)
 
-    train_iter, valid_iter, test_iter = DATASET.get_iter(batch_size=BATCH_SIZE, num_workers=NUM_WORKERS)
+    train_iter, valid_iter, test_iter = DATASET.get_iter(batch_size=BATCH_SIZE, num_workers=NUM_WORKERS, shuffle=True)
 
     for epoch in range(N_EPOCH):
         logging.info(f"*****epoch: {epoch:02}*****")
