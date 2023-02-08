@@ -1,4 +1,1 @@
-dataset/train/commoncrawl.*
-dataset/train/europarl-v7.*
-dataset/train/*_train
-Tokenizer/EncodeAsIds_*_32000_train.pickle
+*.pickle
