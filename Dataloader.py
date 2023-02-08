@@ -129,31 +129,6 @@ class CustomDataset(Dataset):
 
         return trg_vocab, src_vocab
 
-
-    # def build_vocab(self):
-    #     SP_trainer = sp.SentencePieceTrainer
-    #     vocab_size = 32000
-    #     save_dir = "./Tokenizer/models/"
-    #     character_coverage = 0.9999
-    #     model_type = "bpe"
-    #     input_argument = "--input=%s, --model_prefix=%s, --vocab_size=%s, --model_type=%s, --character_coverage=%s, "
-    #     input_argument += f"--unk_id={self.unk_idx}, --unk_piece={self.unk}, --pad_id={self.pad_idx}, --pad_piece={self.pad}, --bos_id={self.bos_idx}, --bos_piece={self.bos}, --eos_id={self.eos_idx}, --eos_piece={self.eos}"
-        
-    #     print("Building German Vocabulary...")
-    #     dataset_dir_de = f"{self.data_path}train/IWSLT16.TED.train.{self.src_lang}-{self.trg_lang}.{self.src_lang}"
-    #     model_prefix_de = f"de_{vocab_size}"
-    #     model_path_de = os.path.join(save_dir, model_prefix_de)
-    #     input_de = input_argument % (dataset_dir_de, model_path_de, vocab_size, model_type, character_coverage)
-    #     de_model = SP_trainer.Train(input_de)
-
-    #     print("Building English Vocabulary...")
-    #     dataset_dir_en = f"{self.data_path}train/IWSLT16.TED.train.{self.src_lang}-{self.trg_lang}.{self.trg_lang}"
-    #     model_prefix_en = f"en_{vocab_size}"
-    #     model_path_en = os.path.join(save_dir, model_prefix_en)
-    #     input_en = input_argument % (dataset_dir_en, model_path_en, vocab_size, model_type, character_coverage)
-    #     en_model = SP_trainer.Train(input_en)   
-                
-    #     print("Voacb Training Finished!")  
     
     # def my_collate_fn(self, samples):
     #     trg = [sample[0] for sample in samples]
@@ -174,8 +149,8 @@ print("Dataset Loaded")
 def my_collate_fn(samples):
     trg = [sample[0] for sample in samples]
     src = [sample[1] for sample in samples]
-    padded_trg = pad_sequence(trg, batch_first=True, padding_value = int(3))  # Padding
-    padded_src = pad_sequence(src, batch_first=True, padding_value = int(3))  # Padding
+    padded_trg = pad_sequence(trg, batch_first=True, padding_value = int(1))  # Padding
+    padded_src = pad_sequence(src, batch_first=True, padding_value = int(1))  # Padding
     return {'padded_trg': padded_trg.contiguous(),
             'padded_src': padded_src.contiguous()}
 
