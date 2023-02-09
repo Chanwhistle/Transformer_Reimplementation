@@ -3,13 +3,13 @@ import torch
 from torchtext.data.metrics import bleu_score
 
 
-def save_pkl(data, fname):
-    with open(fname, "wb") as f:
+def save_pkl(data, filename):
+    with open(filename, "wb") as f:
         pickle.dump(data, f)
 
 
-def load_pkl(fname):
-    with open(fname, "rb") as f:
+def load_pkl(filename):
+    with open(filename, "rb") as f:
         data = pickle.load(f)
     return data
 
