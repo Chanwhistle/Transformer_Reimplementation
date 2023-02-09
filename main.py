@@ -1,4 +1,3 @@
-import yaml
 import os, sys, time
 import logging
 
@@ -7,42 +6,26 @@ from torch import nn, optim
 
 from config import *
 from models.build_model import build_model
-from Dataloader import CustomDataset
+from Dataloader import *
 from utils import get_bleu_score, greedy_decode
 
-with open('config.yaml') as f:
-    conf = yaml.load(f)
-    
-DEVICE = conf['DEVICE']
-CHECKPOINT_DIR = conf['CHECKPOINT_DIR']
-N_EPOCH = conf['N_EPOCH']
-BATCH_SIZE = conf['BATCH_SIZE']
-NUM_WORKERS = conf['NUM_WORKERS']
-LEARNING_RATE = conf['LEARNING_RATE']
-WEIGHT_DECAY = conf['WEIGHT_DECAY']
-ADAM_EPS = conf['ADAM_EPS']
-SCHEDULER_FACTOR = conf['SCHEDULER_FACTOR']
-SCHEDULER_PATIENCE = conf['SCHEDULER_PATIENCE']
-WARM_UP_STEP = conf['WARM_UP_STEP']
-DROPOUT_RATE = conf['DROPOUT_RATE']
 DATASET = CustomDataset()
 
 def train(model, data_loader, optimizer, criterion, epoch, checkpoint_dir):
     model.train()
     epoch_loss = 0
-
-    for idx, (src, tgt) in enumerate(data_loader):
+    for idx, (src, trg) in enumerate(data_loader):
         src = src.to(model.device)
-        tgt = tgt.to(model.device)
-        tgt_x = tgt[:, :-1]
-        tgt_y = tgt[:, 1:]
+        trg = trg.to(model.device)
+        trg_x = trg[:, :-1]
+        trg_y = trg[:, 1:]
 
         optimizer.zero_grad()
 
-        output, _ = model(src, tgt_x)
+        output, _ = model(src, trg_x)
 
         y_hat = output.contiguous().view(-1, output.shape[-1])
-        y_gt = tgt_y.contiguous().view(-1)
+        y_gt = trg_y.contiguous().view(-1)
         loss = criterion(y_hat, y_gt)
         loss.backward()
         nn.utils.clip_grad_norm_(model.parameters(), 1.0)
@@ -70,20 +53,20 @@ def evaluate(model, data_loader, criterion):
 
     total_bleu = []
     with torch.no_grad():
-        for idx, (src, tgt) in enumerate(data_loader):
-            src = src.to(model.device)
-            tgt = tgt.to(model.device)
-            tgt_x = tgt[:, :-1]
-            tgt_y = tgt[:, 1:]
+        for idx, dev in enumerate(tqdm(data_loader)):
+            src = dev["padded_src_dev"].to(model.device)
+            trg = dev["padded_trg_dev"].to(model.device)
+            trg_x = trg[:, :-1]
+            trg_y = trg[:, 1:]
 
-            output, _ = model(src, tgt_x)
+            output, _ = model(src, trg_x)
 
             y_hat = output.contiguous().view(-1, output.shape[-1])
-            y_gt = tgt_y.contiguous().view(-1)
+            y_gt = trg_y.contiguous().view(-1)
             loss = criterion(y_hat, y_gt)
 
             epoch_loss += loss.item()
-            score = get_bleu_score(output, tgt_y, DATASET.vocab_tgt, DATASET.specials)
+            score = get_bleu_score(output, trg_y, DATASET.trg_vocab, DATASET.specials)
             total_bleu.append(score)
         num_samples = idx + 1
 
@@ -93,7 +76,7 @@ def evaluate(model, data_loader, criterion):
 
 
 def main():
-    model = build_model(len(DATASET.vocab_src), len(DATASET.vocab_tgt), device=DEVICE, dr_rate=DROPOUT_RATE)
+    model = build_model(len(DATASET.train_src_tok), len(DATASET.train_trg_tok), device=DEVICE, drop_prob=DROPOUT_RATE)
 
     def initialize_weights(model):
         if hasattr(model, 'weight') and model.weight.dim() > 1:
@@ -106,19 +89,19 @@ def main():
 
     criterion = nn.CrossEntropyLoss(ignore_index=DATASET.pad_idx)
 
-    train_iter, valid_iter, test_iter = DATASET.get_iter(batch_size=BATCH_SIZE, num_workers=NUM_WORKERS, shuffle=True)
+    train_iter, dev_iter, test_iter = DATASET.get_iter(batch_size=BATCH_SIZE, num_workers=NUM_WORKERS, shuffle=True)
 
     for epoch in range(N_EPOCH):
         logging.info(f"*****epoch: {epoch:02}*****")
         train_loss = train(model, train_iter, optimizer, criterion, epoch, CHECKPOINT_DIR)
         logging.info(f"train_loss: {train_loss:.5f}")
-        valid_loss, bleu_score  = evaluate(model, valid_iter, criterion)
+        dev_loss, bleu_score  = evaluate(model, dev_iter, criterion)
         if epoch > WARM_UP_STEP:
-            scheduler.step(valid_loss)
-        logging.info(f"valid_loss: {valid_loss:.5f}, bleu_score: {bleu_score:.5f}")
+            scheduler.step(dev_loss)
+        logging.info(f"dev_loss: {dev_loss:.5f}, bleu_score: {bleu_score:.5f}")
 
-        logging.info(DATASET.translate(model, "A little girl climbing into a wooden playhouse .", greedy_decode))
-        # expected output: "Ein kleines Mädchen klettert in ein Spielhaus aus Holz ."
+        # logging.info(DATASET.translate(model, "A little girl climbing into a wooden playhouse .", greedy_decode))
+        # # expected output: "Ein kleines Mädchen klettert in ein Spielhaus aus Holz ."
 
     test_loss, bleu_score = evaluate(model, test_iter, criterion)
     logging.info(f"test_loss: {test_loss:.5f}, bleu_score: {bleu_score:.5f}")
