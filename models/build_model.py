@@ -11,7 +11,7 @@ from models.layers.positionwise_feed_forward_layer import *
 
 def build_model(src_vocab_size,
                 tgt_vocab_size,
-                device=torch.device("gpu"),
+                device = torch.device("cuda:0"),
                 max_len = 5000,
                 n_layer = 6,
                 d_model = 512,
@@ -50,29 +50,31 @@ def build_model(src_vocab_size,
                                             hidden = hidden_layer,
                                             drop_prob = drop_prob)
     
-    norm = nn.LayerNorm(d_model, eps = norm_eps)
-    
     encoder_layer = EncoderLayer(
                                  size = d_model,
                                  self_attn = copy(attention),
                                  feed_forward = copy(position_ff),
                                  drop_prob = drop_prob,
-                                 n_layers = n_layer)
+                                 n_layers = n_layer,
+                                 eps = norm_eps)
     decoder_layer = DecoderLayer(
                                  size = d_model,
                                  self_attn = copy(attention),
                                  cross_attn = copy(attention),
                                  feed_forward = copy(position_ff),
                                  drop_prob = drop_prob,
-                                 n_layers = n_layer)
+                                 n_layers = n_layer,
+                                 eps = norm_eps)
 
     encoder = Encoder(
                       layer = encoder_layer,
-                      n_layers = n_layer)
+                      n_layers = n_layer,
+                      eps = norm_eps)
     
     decoder = Decoder(
                       layer = decoder_layer,
-                      n_layers = n_layer)
+                      n_layers = n_layer,
+                      eps = norm_eps)
     
     generator = nn.Linear(d_model, tgt_vocab_size)
 
