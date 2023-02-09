@@ -2,7 +2,10 @@
 Transformer
 '''
 
+import numpy as np
+import torch
 import torch.nn as nn
+import torch.nn.functional as F
         
 class Transformer(nn.Module):
     def __init__(self, src_embed, trg_embed, encoder, decoder, generator):

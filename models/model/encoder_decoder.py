@@ -11,9 +11,10 @@ class SublayerConnection(nn.Module):
     A residual connection followed by a layer norm.
     Note for code simplicity the norm is first as opposed to last.
     """
-    def __init__(self, size, dropout):
+    def __init__(self, size, dropout, eps):
         super(SublayerConnection, self).__init__()
-        self.norm = LayerNorm(size)
+        self.eps = eps
+        self.norm = LayerNorm(size, self.eps)
         self.dropout = nn.Dropout(p=dropout)
 
     def forward(self, x, sublayer):
@@ -41,7 +42,7 @@ class LayerNorm(nn.Module):
         mean = x.mean(-1, keepdim = True)
         std = x.std(-1, keepdim = True)
         out = self.gamma * (x-mean)/(std+self.eps) + self.beta
-        return out
+        return out,
     
 '''
 Layer cloning
@@ -59,11 +60,12 @@ Encoder
 class Encoder(nn.Module):
     "Core encoder is a stack of N layers"
 
-    def __init__(self, layer, n_layers):
+    def __init__(self, layer, n_layers, eps):
         super(Encoder, self).__init__()
+        self.eps = eps
         self.n_layers = n_layers
         self.layers = clones(layer, n_layers)
-        self.norm = LayerNorm(layer.size)
+        self.norm = LayerNorm(layer.size, self.eps)
 
     def forward(self, src, src_mask):
         "Pass the input (and mask) through each layer in turn."
@@ -75,12 +77,12 @@ class Encoder(nn.Module):
 
 
 class EncoderLayer(nn.Module):
-    def __init__(self, size, self_attn, feed_forward, drop_prob, n_layers):
+    def __init__(self, size, self_attn, feed_forward, drop_prob, n_layers, eps):
         super(EncoderLayer, self).__init__()
         self.n_layers = n_layers
         self.self_attn = self_attn
         self.feed_forward = feed_forward
-        self.sublayer = clones(SublayerConnection(size, drop_prob), self.n_layers)
+        self.sublayer = clones(SublayerConnection(size, drop_prob, eps), self.n_layers)
         self.size = size
         
     def forward(self, src, src_mask):
@@ -98,11 +100,12 @@ Decoder
 class Decoder(nn.Module):
     "Generic N layer decoder with masking."
 
-    def __init__(self, layer, n_layers):
+    def __init__(self, layer, n_layers, eps):
         super(Decoder, self).__init__()
+        self.eps = eps
         self.n_layers = n_layers
         self.layers = clones(layer, n_layers)
-        self.norm = LayerNorm(layer.size)
+        self.norm = LayerNorm(layer.size, self.eps)
 
     def forward(self, trg, encoder_out, trg_mask, src_tgt_mask):
         out = trg
@@ -113,14 +116,14 @@ class Decoder(nn.Module):
 
 
 class DecoderLayer(nn.Module):
-    def __init__(self, size, self_attn, cross_attn, feed_forward, drop_prob, n_layers):
+    def __init__(self, size, self_attn, cross_attn, feed_forward, drop_prob, n_layers, eps):
         super(DecoderLayer, self).__init__()
         self.n_layers = n_layers
         self.size = size
         self.self_attn = self_attn
         self.cross_attn = cross_attn
         self.feed_forward = feed_forward
-        self.sublayer = clones(SublayerConnection(size, drop_prob), self.n_layers)
+        self.sublayer = clones(SublayerConnection(size, drop_prob, eps), self.n_layers)
         
     def forward(self, trg, encoder_out, trg_mask, src_tgt_mask):
         out = trg

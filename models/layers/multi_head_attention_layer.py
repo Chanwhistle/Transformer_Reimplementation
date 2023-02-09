@@ -8,16 +8,16 @@ Scale Dot Product Attention
 '''
 
 class ScaleDotProductAttention(nn.Module):
-    def __init__(self):
-        '''
-        Compute scaled dot product attention
-        calculate attention score
-        
-        Query = given sentence that we focused on(decoder)
-        Key = every sentence to check relationship with Query(encoder)
-        Value = every sentence same with Key(encoder)
-        '''        
-        super(ScaleDotProductAttention).__init__()  # reset nn.Module
+    '''
+    Compute scaled dot product attention
+    calculate attention score
+    
+    Query = given sentence that we focused on(decoder)
+    Key = every sentence to check relationship with Query(encoder)
+    Value = every sentence same with Key(encoder)
+    '''     
+    def __init__(self):   
+        super(ScaleDotProductAttention, self).__init__()  # reset nn.Module
         self.softmax = nn.Softmax()
     
     def forward(self, query, key, value, mask = None, e = 1e-12):
@@ -50,13 +50,13 @@ Multi Head Attention
 
 class MultiHeadAttention(nn.Module):
     def __init__(self, d_model, n_head):
-        super(MultiHeadAttention).__init__()
+        super(MultiHeadAttention, self).__init__()
         self.n_head = n_head
-        self.attention = ScaleDotProductAttention()
         self.w_query = nn.Linear(d_model, d_model)
         self.w_key = nn.Linear(d_model, d_model)
         self.w_value = nn.Linear(d_model, d_model)
         self.w_concat = nn.Linear(d_model, d_model)
+        self.attention = ScaleDotProductAttention()
         
     def split(self, tensor):
         '''
