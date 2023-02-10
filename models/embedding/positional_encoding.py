@@ -7,7 +7,7 @@ Positional Encoding
 '''
 
 class PositionalEncoding(nn.Module):
-    def __init__(self, d_model, max_len, device):
+    def __init__(self, d_embed, max_len, device):
         '''
         sin, cos encoding
         
@@ -19,7 +19,7 @@ class PositionalEncoding(nn.Module):
         super(PositionalEncoding, self).__init__() # reset nn.Module
         
         # create tensor that has same size with embedding vector(max_len, d_model)
-        self.encoding = torch.zeros(max_len, d_model, device=device)
+        self.encoding = torch.zeros(max_len, d_embed, device=device)
         self.encoding.requires_grad = False # Encoding doesn't need gradient     
         
         # pos is tensor that have size of max_len
@@ -28,11 +28,11 @@ class PositionalEncoding(nn.Module):
         pos = pos.float().unsqueeze(dim=1) # int64 -> float32
         
         # _2i : (d_model, ) size, i is index of d_model
-        _2i = torch.arange(0, d_model, step=2, device=device).float()
+        _2i = torch.arange(0, d_embed, step=2, device=device).float()
         
         # (max_len, 1) / (d_model/2 ) -> (max_len, d_model/2)
-        self.encoding[:, ::2] = torch.sin(pos / (10000 ** (_2i / d_model)))
-        self.encoding[:, 1::2] = torch.cos(pos / (10000 ** (_2i / d_model)))
+        self.encoding[:, ::2] = torch.sin(pos / (10000 ** (_2i / d_embed)))
+        self.encoding[:, 1::2] = torch.cos(pos / (10000 ** (_2i / d_embed)))
 
 
     def forward(self, x):

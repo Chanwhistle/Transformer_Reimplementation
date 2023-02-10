@@ -43,7 +43,7 @@ class Transformer(nn.Module):
     def make_trg_mask(self, trg):
         pad_mask = self.make_pad_mask(trg, trg)
         seq_mask = self.make_subsequent_mask(trg, trg)
-        mask = pad_mask & seq_mask
+        # mask = pad_mask & seq_mask
         return pad_mask & seq_mask
     
     
@@ -52,7 +52,7 @@ class Transformer(nn.Module):
         return pad_mask
    
     
-    def make_pad_mask(self, query, key, pad_idx=3):
+    def make_pad_mask(self, query, key, pad_idx=1):
         # query: (n_batch, len_query)
         # key: (n_batch, len_key)
         len_query, len_key = query.size(1), key.size(1)

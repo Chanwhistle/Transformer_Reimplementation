@@ -10,10 +10,11 @@ from .model.transformer import *
 from models.layers.positionwise_feed_forward_layer import *
 
 def build_model(src_vocab_size,
-                tgt_vocab_size,
+                trg_vocab_size,
                 device = torch.device("cuda:0"),
                 max_len = 5000,
                 n_layer = 6,
+                d_embed = 512,
                 d_model = 512,
                 n_head = 8,
                 hidden_layer = 2048,
@@ -23,14 +24,14 @@ def build_model(src_vocab_size,
     copy = copy.deepcopy
 
     src_token_embed = TokenEmbedding(
-                                     d_model = d_model,
+                                     d_embed = d_embed,
                                      vocab_size = src_vocab_size)
-    tgt_token_embed = TokenEmbedding(
-                                     d_model = d_model,
-                                     vocab_size = tgt_vocab_size)
+    trg_token_embed = TokenEmbedding(
+                                     d_embed = d_embed,
+                                     vocab_size = trg_vocab_size)
     
     pos_embed = PositionalEncoding(
-                                   d_model = d_model,
+                                   d_embed = d_embed,
                                    max_len = max_len,
                                    device = device)
 
@@ -38,15 +39,16 @@ def build_model(src_vocab_size,
                                      token_embed = src_token_embed,
                                      pos_embed = copy(pos_embed))
     trg_embed = TransformerEmbedding(
-                                     token_embed = tgt_token_embed,
+                                     token_embed = trg_token_embed,
                                      pos_embed = copy(pos_embed))
 
     attention = MultiHeadAttention(
+                                    d_embed = d_embed,
                                     d_model = d_model,
                                     n_head = n_head)
     
     position_ff = PositionwiseFeedForward(
-                                            d_model = d_model,
+                                            d_embed = d_embed,
                                             hidden = hidden_layer,
                                             drop_prob = drop_prob)
     
@@ -76,7 +78,7 @@ def build_model(src_vocab_size,
                       n_layers = n_layer,
                       eps = norm_eps)
     
-    generator = nn.Linear(d_model, tgt_vocab_size)
+    generator = nn.Linear(d_model, trg_vocab_size)
 
     model = Transformer(
                         src_embed = src_embed,
@@ -84,6 +86,7 @@ def build_model(src_vocab_size,
                         encoder = encoder,
                         decoder = decoder,
                         generator = generator).to(device)
+    
     model.device = device
 
     return model
