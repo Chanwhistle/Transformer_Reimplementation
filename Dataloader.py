@@ -148,7 +148,7 @@ class CustomDataset(Dataset):
                 temp_trg = f.read().splitlines()
             with open(src_path, encoding = "utf-8") as f:
                 temp_src = f.read().splitlines()
-            # assert(len(temp_trg) == len(temp_src)), "Vocab size is different!!"
+            assert(len(temp_trg) == len(temp_src)), "Vocab size is different!!"
             trg_corpus += temp_trg
             src_corpus += temp_src
         print("Loaded Corpus! \nCorpus sizes:")
