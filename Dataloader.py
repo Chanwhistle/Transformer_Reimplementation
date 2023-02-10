@@ -37,10 +37,6 @@ class CustomDataset(Dataset):
                 }
         self.data_path = data_path
         
-        self.vocab_src = None
-        self.vocab_trg = None
-
-
         train_file = os.path.join(self.data_path, "train.pickle")
         dev_file = os.path.join(self.data_path, "dev.pickle")
         test_file = os.path.join(self.data_path, "test.pickle")
@@ -100,8 +96,8 @@ class CustomDataset(Dataset):
         if not os.path.isfile(f'./Tokenizer/EncodeAsIds_{type}.pickle'):
             print("Encoding As Id...") 
             for src, trg in tqdm(vocab):       
+                tok_tmp_trg = trg_model.EncodeAsIds(trg); tok_tmp_trg.insert(0,self.bos_idx); tok_tmp_trg.append(self.eos_idx) 
                 tok_tmp_src = src_model.EncodeAsIds(src); tok_tmp_src.insert(0,self.bos_idx); tok_tmp_src.append(self.eos_idx)
-                tok_tmp_trg = trg_model.EncodeAsIds(trg); tok_tmp_trg.insert(0,self.bos_idx); tok_tmp_trg.append(self.eos_idx)       # insert <EOS>
                 tokenized_trg.append(tok_tmp_trg)
                 tokenized_src.append(tok_tmp_src)
             assert(len(tokenized_trg) == len(tokenized_src)), "Vocab size is different!!"
