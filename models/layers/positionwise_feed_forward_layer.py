@@ -15,7 +15,6 @@ class PositionwiseFeedForward(nn.Module):
         self.dropout = nn.Dropout(p=drop_prob)
         
     def forward(self, x):
-        x = torch.Tensor(x[0])
         x = self.linear1(x)
         x = self.relu(x)
         x = self.dropout(x)

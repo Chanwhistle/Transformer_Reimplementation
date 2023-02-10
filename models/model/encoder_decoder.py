@@ -44,6 +44,7 @@ class LayerNorm(nn.Module):
         out = self.gamma * (x-mean)/(std+self.eps) + self.beta
         return out,
     
+    
 '''
 Layer cloning
 '''
@@ -91,11 +92,10 @@ class EncoderLayer(nn.Module):
         out = self.feed_forward(out)
         return out     
     
+    
 '''
 Decoder
 '''
-
-
 
 class Decoder(nn.Module):
     "Generic N layer decoder with masking."
@@ -131,3 +131,4 @@ class DecoderLayer(nn.Module):
         out = self.cross_attn(query=out, key=encoder_out, value=encoder_out, mask=src_tgt_mask)
         out = self.feed_forward(out)
         return out   
+    
