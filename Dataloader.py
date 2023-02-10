@@ -40,7 +40,7 @@ class CustomDataset(Dataset):
         self.vocab_src = None
         self.vocab_trg = None
 
-    def build_dataset(self):
+
         train_file = os.path.join(self.data_path, "train.pickle")
         dev_file = os.path.join(self.data_path, "dev.pickle")
         test_file = os.path.join(self.data_path, "test.pickle")
@@ -105,7 +105,7 @@ class CustomDataset(Dataset):
                 tokenized_trg.append(tok_tmp_trg)
                 tokenized_src.append(tok_tmp_src)
             assert(len(tokenized_trg) == len(tokenized_src)), "Vocab size is different!!"
-            tok_trg_src =[(en, de) for en, de in zip(tokenized_trg, tokenized_src)]
+            tok_trg_src =[(en, de) for en, de in zip(self.to_tensor(tokenized_trg), self.to_tensor(tokenized_src))]
             with open(f'./Tokenizer/EncodeAsIds_{type}.pickle', 'wb') as f:
                 pickle.dump(tok_trg_src, f, pickle.HIGHEST_PROTOCOL)            
         
