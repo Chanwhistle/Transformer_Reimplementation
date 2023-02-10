@@ -1,7 +1,6 @@
 import math
 import torch
 import torch.nn as nn
-import numpy as np
 
 '''
 Scale Dot Product Attention
@@ -68,6 +67,7 @@ class MultiHeadAttention(nn.Module):
         batch_size, length, d_embed = tensor.size()
         d_tensor = d_embed//self.n_head
         tensor = tensor.reshape(batch_size, self.n_head, length, d_tensor)
+        import pdb;pdb.set_trace()
         return tensor
     
     def concat(self, tensor):
