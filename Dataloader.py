@@ -88,18 +88,18 @@ class CustomDataset(Dataset):
                                                self.test[1], "test")
         self.test_t = [(en, de) for en, de in zip(self.to_tensor(self.test_trg_tok), self.to_tensor(self.test_src_tok))]
         print("built test dataset")
+        
+        
+        with open("./Tokenizer/vocab/en_32000/en_32000.vocab", encoding = "utf-8") as f:
+            self.vocab_trg = f.read().splitlines()
+        with open("./Tokenizer/vocab/de_32000/de_32000.vocab", encoding = "utf-8") as f:               
+            self.vocab_src = f.read().splitlines()
     
 
     def __len__(self):
 
         return len(self.train_trg_tok)
 
-
-    def __getitem__(self,idx):
-        train_en = torch.IntTensor(self.train_trg_tok[idx])
-        train_de = torch.IntTensor(self.train_src_tok[idx])  # dataset[0] = encoded train_en data
-       
-        return train_en, train_de,
 
     def tokenizer(self, model):
         SP = sp.SentencePieceProcessor()
@@ -111,7 +111,7 @@ class CustomDataset(Dataset):
             "Tokenizer/vocab/"f"{model}/"f"{model}.model")
         else:
             pass
-                  
+                                  
         print("Loaded "f"{model[:2]}_Tokenizer")
         return SP
 
@@ -248,4 +248,3 @@ class CustomDataset(Dataset):
                                collate_fn=self.my_collate_fn,
                                **kwargs)
         return train_iter, dev_iter, test_iter
-    
