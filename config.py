@@ -3,7 +3,7 @@ import torch
 DEVICE = torch.device('cuda:0')
 CHECKPOINT_DIR = "./checkpoint"
 N_EPOCH = 1000
-BATCH_SIZE = 128
+BATCH_SIZE = 32
 NUM_WORKERS = 8
 LEARNING_RATE = 1e-5
 WEIGHT_DECAY = 5e-4
