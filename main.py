@@ -14,7 +14,7 @@ DATASET = CustomDataset()
 def train(model, data_loader, optimizer, criterion, epoch, checkpoint_dir):
     model.train()
     epoch_loss = 0
-    for idx, (src, trg) in enumerate(data_loader):
+    for idx, (src, trg) in enumerate(tqdm(data_loader)):
         src = src.to(model.device)
         trg = trg.to(model.device)
         trg_x = trg[:, :-1]
@@ -23,7 +23,6 @@ def train(model, data_loader, optimizer, criterion, epoch, checkpoint_dir):
         optimizer.zero_grad()
 
         output, _ = model(src, trg_x)
-
         y_hat = output.contiguous().view(-1, output.shape[-1])
         y_gt = trg_y.contiguous().view(-1)
         loss = criterion(y_hat, y_gt)
@@ -53,9 +52,9 @@ def evaluate(model, data_loader, criterion):
 
     total_bleu = []
     with torch.no_grad():
-        for idx, dev in enumerate(tqdm(data_loader)):
-            src = dev["padded_src_dev"].to(model.device)
-            trg = dev["padded_trg_dev"].to(model.device)
+        for idx, (src, trg) in enumerate(tqdm(data_loader)):
+            src = src.to(model.device)
+            trg = trg.to(model.device)
             trg_x = trg[:, :-1]
             trg_y = trg[:, 1:]
 
@@ -76,7 +75,7 @@ def evaluate(model, data_loader, criterion):
 
 
 def main():
-    model = build_model(len(DATASET.train_src_tok), len(DATASET.train_trg_tok), device=DEVICE, drop_prob=DROPOUT_RATE)
+    model = build_model(len(DATASET.vocab_src), len(DATASET.vocab_trg), device=DEVICE, drop_prob=DROPOUT_RATE)
 
     def initialize_weights(model):
         if hasattr(model, 'weight') and model.weight.dim() > 1:
@@ -89,10 +88,10 @@ def main():
 
     criterion = nn.CrossEntropyLoss(ignore_index=DATASET.pad_idx)
 
-    train_iter, dev_iter, test_iter = DATASET.get_iter(batch_size=BATCH_SIZE, num_workers=NUM_WORKERS, shuffle=True)
+    train_iter, dev_iter, test_iter = DATASET.get_iter(batch_size=BATCH_SIZE, num_workers=NUM_WORKERS)
 
     for epoch in range(N_EPOCH):
-        logging.info(f"*****epoch: {epoch:02}*****")
+        logging.info(f"*****epoch: {epoch:03}*****")
         train_loss = train(model, train_iter, optimizer, criterion, epoch, CHECKPOINT_DIR)
         logging.info(f"train_loss: {train_loss:.5f}")
         dev_loss, bleu_score  = evaluate(model, dev_iter, criterion)
