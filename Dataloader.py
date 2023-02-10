@@ -38,7 +38,7 @@ class CustomDataset(Dataset):
         self.data_path = data_path
         
         self.vocab_src = None
-        self.vocab_tgt = None
+        self.vocab_trg = None
 
         train_file = os.path.join(data_path, "train.pickle")
         dev_file = os.path.join(data_path, "dev.pickle")
@@ -51,13 +51,9 @@ class CustomDataset(Dataset):
             self.train = [(en, de) for en, de in zip(trg_train, src_train)]
             save_pkl(self.train , train_file)
             
-        self.train_trg_tok = self.tokenize(f"{self.trg_lang}_32000",
-                                                self.train[0], "train")
-        self.train_src_tok = self.tokenize(f"{self.src_lang}_32000",
-                                                self.train[1], "train")
-                
-        self.train_t = [(en, de) for en, de in zip(self.to_tensor(self.train_trg_tok), self.to_tensor(self.train_src_tok))]
+        self.train_t = self.tokenize(self.train, "train")
         print("built train dataset")
+        print(self.train_t[-1])
         
         
         if os.path.exists(dev_file):
@@ -67,28 +63,21 @@ class CustomDataset(Dataset):
             self.dev = [(en, de) for en, de in zip(trg_dev, src_dev)]
             save_pkl(self.dev , dev_file)
             
-        self.dev_trg_tok = self.tokenize(f"{self.trg_lang}_32000",
-                                              self.dev[0], "dev")
-        self.dev_src_tok = self.tokenize(f"{self.src_lang}_32000",
-                                              self.dev[1], "dev")
-        self.dev_t = [(en, de) for en, de in zip(self.to_tensor(self.dev_trg_tok), self.to_tensor(self.dev_src_tok))]
+        self.dev_t = self.tokenize(self.dev, "dev")
         print("built dev dataset")
+        print(self.dev_t[-1])
             
             
         if os.path.exists(test_file):
             self.test = load_pkl(test_file)
         else:
-            trg_test, src_test = self.load_corpus("dev")
+            trg_test, src_test = self.load_corpus("test")
             self.test = [(en, de) for en, de in zip(trg_test, src_test)]
             save_pkl(self.test , test_file)
             
-        self.test_trg_tok = self.tokenize(f"{self.trg_lang}_32000",
-                                               self.test[0], "test")
-        self.test_src_tok = self.tokenize(f"{self.src_lang}_32000",
-                                               self.test[1], "test")
-        self.test_t = [(en, de) for en, de in zip(self.to_tensor(self.test_trg_tok), self.to_tensor(self.test_src_tok))]
+        self.test_t = self.tokenize(self.test, "test")
         print("built test dataset")
-        
+        print(self.test_t[-1])
         
         with open("./Tokenizer/vocab/en_32000/en_32000.vocab", encoding = "utf-8") as f:
             self.vocab_trg = f.read().splitlines()
@@ -98,45 +87,41 @@ class CustomDataset(Dataset):
 
     def __len__(self):
 
-        return len(self.train_trg_tok)
+        return len(self.train_t)
 
 
     def tokenizer(self, model):
         SP = sp.SentencePieceProcessor()
-        SP_temp = SP.Load(model_file =
-        "Tokenizer/vocab/"f"{model}/"f"{model}.model")
-        if SP_temp == False:
+        if not os.path.isfile("Tokenizer/vocab/"f"{model}/"f"{model}.model"):
             self.build_vocab()
-            SP_temp = SP.Load(model_file = 
-            "Tokenizer/vocab/"f"{model}/"f"{model}.model")
-        else:
-            pass
-                                  
-        print("Loaded "f"{model[:2]}_Tokenizer")
+            
+        SP.Load(model_file = 
+        "Tokenizer/vocab/"f"{model}/"f"{model}.model")
         return SP
 
 
-    def tokenize(self, model, vocab, type):
-        tokenized = []      
-        tokenizer = self.tokenizer(model)
-
-        if os.path.isfile(f'./Tokenizer/EncodeAsIds_{model}_{type}.pickle') == False:
+    def tokenize(self, vocab, type):
+        tokenized_trg = []
+        tokenized_src = []      
+        trg_model = self.tokenizer(f"{self.trg_lang}_32000")
+        src_model = self.tokenizer(f"{self.src_lang}_32000")
+        if not os.path.isfile(f'./Tokenizer/EncodeAsIds_{type}.pickle'):
             print("Encoding As Id...") 
-            for lines in tqdm(vocab):
-                tokenized_temp = tokenizer.EncodeAsIds(lines)
-                tokenized_temp.insert(0,self.bos_idx)        # insert <BOS>
-                tokenized_temp.append(self.eos_idx)          # insert <EOS>
-                tokenized.append(tokenized_temp)
-            with open(f'./Tokenizer/EncodeAsIds_{model}_{type}.pickle', 'wb') as f:
-                pickle.dump(tokenized, f, pickle.HIGHEST_PROTOCOL)
+            for src, trg in tqdm(vocab):       
+                tok_tmp_src = src_model.EncodeAsIds(src); tok_tmp_src.insert(0,self.bos_idx); tok_tmp_src.append(self.eos_idx)
+                tok_tmp_trg = trg_model.EncodeAsIds(trg); tok_tmp_trg.insert(0,self.bos_idx); tok_tmp_trg.append(self.eos_idx)       # insert <EOS>
+                tokenized_trg.append(tok_tmp_trg)
+                tokenized_src.append(tok_tmp_src)
+                tok_trg_src =[(en, de) for en, de in zip(tokenized_trg, tokenized_src)]
+            with open(f'./Tokenizer/EncodeAsIds_{type}.pickle', 'wb') as f:
+                pickle.dump(tok_trg_src, f, pickle.HIGHEST_PROTOCOL)            
         
         else:                
-            print(f"Loading Encoded {model[:2]} file!")
-            with open(f'./Tokenizer/EncodeAsIds_{model}_{type}.pickle', 'rb') as f:
-                tokenized = pickle.load(f)
+            print(f"Loading Encoded file!")
+            with open(f'./Tokenizer/EncodeAsIds_{type}.pickle', 'rb') as f:
+                tok_trg_src = pickle.load(f)
         
-        print(f"{model[:2]}_vocab tokenizing Finished!")
-        return tokenized
+        return tok_trg_src
 
 
     def load_corpus(self, type):
@@ -174,7 +159,7 @@ class CustomDataset(Dataset):
     
             
     def build_vocab(self):
-        # building German Vocab
+        # building Vocab
         Stp_trainer = sp.SentencePieceTrainer
         vocab_size = 32000
         model_type = "bpe"
@@ -248,3 +233,4 @@ class CustomDataset(Dataset):
                                collate_fn=self.my_collate_fn,
                                **kwargs)
         return train_iter, dev_iter, test_iter
+    
