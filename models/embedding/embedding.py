@@ -18,7 +18,6 @@ class TokenEmbedding(nn.Module):
 '''
 Transformer Embedding
 '''
-
 class TransformerEmbedding(nn.Module):
     def __init__(self, token_embed, pos_embed, drop_prob = 0):
         super(TransformerEmbedding, self).__init__()
