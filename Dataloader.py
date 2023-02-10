@@ -40,9 +40,10 @@ class CustomDataset(Dataset):
         self.vocab_src = None
         self.vocab_trg = None
 
-        train_file = os.path.join(data_path, "train.pickle")
-        dev_file = os.path.join(data_path, "dev.pickle")
-        test_file = os.path.join(data_path, "test.pickle")
+    def build_dataset(self):
+        train_file = os.path.join(self.data_path, "train.pickle")
+        dev_file = os.path.join(self.data_path, "dev.pickle")
+        test_file = os.path.join(self.data_path, "test.pickle")
 
         if os.path.exists(train_file):
             self.train = load_pkl(train_file)
@@ -50,11 +51,8 @@ class CustomDataset(Dataset):
             trg_train, src_train = self.load_corpus("train")
             self.train = [(en, de) for en, de in zip(trg_train, src_train)]
             save_pkl(self.train , train_file)
-            
         self.train_t = self.tokenize(self.train, "train")
-        print("built train dataset")
-        print(self.train_t[-1])
-        
+        print("built train dataset")        
         
         if os.path.exists(dev_file):
             self.dev = load_pkl(dev_file)
@@ -62,11 +60,8 @@ class CustomDataset(Dataset):
             trg_dev, src_dev = self.load_corpus("dev")
             self.dev = [(en, de) for en, de in zip(trg_dev, src_dev)]
             save_pkl(self.dev , dev_file)
-            
         self.dev_t = self.tokenize(self.dev, "dev")
         print("built dev dataset")
-        print(self.dev_t[-1])
-            
             
         if os.path.exists(test_file):
             self.test = load_pkl(test_file)
@@ -74,10 +69,8 @@ class CustomDataset(Dataset):
             trg_test, src_test = self.load_corpus("test")
             self.test = [(en, de) for en, de in zip(trg_test, src_test)]
             save_pkl(self.test , test_file)
-            
         self.test_t = self.tokenize(self.test, "test")
         print("built test dataset")
-        print(self.test_t[-1])
         
         with open("./Tokenizer/vocab/en_32000/en_32000.vocab", encoding = "utf-8") as f:
             self.vocab_trg = f.read().splitlines()
@@ -94,7 +87,6 @@ class CustomDataset(Dataset):
         SP = sp.SentencePieceProcessor()
         if not os.path.isfile("Tokenizer/vocab/"f"{model}/"f"{model}.model"):
             self.build_vocab()
-            
         SP.Load(model_file = 
         "Tokenizer/vocab/"f"{model}/"f"{model}.model")
         return SP
@@ -112,7 +104,8 @@ class CustomDataset(Dataset):
                 tok_tmp_trg = trg_model.EncodeAsIds(trg); tok_tmp_trg.insert(0,self.bos_idx); tok_tmp_trg.append(self.eos_idx)       # insert <EOS>
                 tokenized_trg.append(tok_tmp_trg)
                 tokenized_src.append(tok_tmp_src)
-                tok_trg_src =[(en, de) for en, de in zip(tokenized_trg, tokenized_src)]
+            assert(len(tokenized_trg) == len(tokenized_src)), "Vocab size is different!!"
+            tok_trg_src =[(en, de) for en, de in zip(tokenized_trg, tokenized_src)]
             with open(f'./Tokenizer/EncodeAsIds_{type}.pickle', 'wb') as f:
                 pickle.dump(tok_trg_src, f, pickle.HIGHEST_PROTOCOL)            
         
