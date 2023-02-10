@@ -1,7 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<mteval>
-<refset setid="iwslt2016-tst2014" srclang="german" trglang="en" refid="ref">
-<doc docid="Disaster" genre="lectures">
 <seg id="1"> Well , good morning ladies and gentlemen . </seg>
 <seg id="2"> Thank you very much for having me here today . </seg>
 <seg id="3"> And now I have to present myself by myself . </seg>
@@ -117,8 +113,6 @@
 <seg id="113"> This shows that there is still a lot to do , also for the public communication in a case of emergency , but the unprecedented solidarity with the citizens of Magdeburg and its surroundings has simply shown that disaster communication is not possible any more without the social media . </seg>
 <seg id="114"> And I hope that I have convinced you a bit and that these media , that is often used for the positive things in life , can also be reasonably used during crisis and that we as a city which is responsible for the catastrophe prevention will discover it and expand it in a new way in the future for your , for the benefit of the citizens and I will finish here and say thank you for your attention even when I could hardly see the whole time . </seg>
 <seg id="115"> Thank you very much . </seg>
-</doc>
-<doc docid="Entertaining" genre="lectures">
 <seg id="1"> So , good evening . </seg>
 <seg id="2"> I am Sharlene Anders . </seg>
 <seg id="3"> I am a writer and a director , as you just heard . </seg>
@@ -266,8 +260,6 @@
 <seg id="145"> So , if somebody thinks now : I absolutely want to contribute already , I just had an idea for a character or I've got a drawing or a cartoon or whatever , that's already possible at this stage . </seg>
 <seg id="146"> You can already find us on the Internet . </seg>
 <seg id="147"> On Facebok . </seg>
-</doc>
-<doc docid="Erinnerungen" genre="lectures">
 <seg id="1"> I like how the speakers talk off-the-cuff . </seg>
 <seg id="2"> Yes , me , too . </seg>
 <seg id="3"> Welcome to : is it possible to erase memories ? </seg>
@@ -396,8 +388,6 @@
 <seg id="126"> No , I believe our brain has so much capacity that it can memorize everything . </seg>
 <seg id="127"> That's no problem , however , because we are free to choose how much emphasis we put on or how much importance we attach to an event , a memory , a thought , that depends on us . </seg>
 <seg id="128"> And my appeal to you , play with the pictures in your head , use the power of your unconscious and give it suggestions every day that enrich your life . </seg>
-</doc>
-<doc docid="Festival" genre="lectures">
 <seg id="1"> Well , good afternoon . </seg>
 <seg id="2"> Thank you very much for the invitation . </seg>
 <seg id="3"> When someone asks me at a party what I do in in my free time , and I tell them that , together with friends , I organize a music festival , then I see sparkling eyes and in the heads of my listeners the association of dancing crowds of people , portable toilets , tent cities and mud fighting appear . </seg>
@@ -468,8 +458,6 @@
 <seg id="68"> Therefore , we are extremely happy that young musicians in whole Europe take the lead and organize Podium festivals at their home towns . </seg>
 <seg id="69"> Well , if you still cannot really imagine how it feels to experience classical music in that way , just come by . </seg>
 <seg id="70"> At the beginning of the next year , we will be in Esslingen and we would be happy to see you there . </seg>
-</doc>
-<doc docid="Kunst" genre="lectures">
 <seg id="1"> Yes, ladies and gentlemen , learning . </seg>
 <seg id="2"> You might think that means acquiring knowledge . </seg>
 <seg id="3"> Knowledge is a part of learning or a consequence of learning , but I think learning is so much more , for example gathering experience and gaining power of judgment . </seg>
@@ -591,8 +579,6 @@
 <seg id="119"> And if we are creative and accept creativity , inventions , if we take our inspiration from art and culture to take our own stand , in communicating with art , if we interact and ultimately work continuously on our own identity by dealing with art and culture , then all of us will profit . </seg>
 <seg id="120"> And I hope that you will have numerous artistic and cultural experiences from which you can benefit . </seg>
 <seg id="121"> Thank you . </seg>
-</doc>
-<doc docid="Sterben" genre="lectures">
 <seg id="1"> Well , thank you very much . </seg>
 <seg id="2"> I suggest we just wait for the first picture . </seg>
 <seg id="3"> So I have put some slides here to support my memory . </seg>
@@ -670,8 +656,6 @@
 <seg id="75"> And such conversations need spaces and regarding this I think , and this is how I thought of the title for this talk , and prepared here , such spaces like the Kreuzeskirchenviertel in Essen , I have tried to acquaint you with both on an image , spaces , where we need to think about subjects like this , where there is a protected space , so that it is not offending , that maybe it is not too theoretical , but that above all an exchange takes place there . </seg>
 <seg id="76"> So that , when we are old , we are in the position to say , wow , a dance into May , despite my possibly very old age , that would be nice again . </seg>
 <seg id="77"> Thank you very much for your attention . </seg>
-</doc>
-<doc docid="Unendlichkeit" genre="lectures">
 <seg id="1"> A very nice evening . </seg>
 <seg id="2"> I brought two things . </seg>
 <seg id="3"> If the first part is too boring for you , try to stay awake . </seg>
@@ -837,8 +821,6 @@
 <seg id="163"> It's simple , even two thirds are not one hundred percent : this is the difference between theory and practice . </seg>
 <seg id="164"> I hope all of you could profit from this lecture . </seg>
 <seg id="165"> Thank you very much . </seg>
-</doc>
-<doc docid="Vertrauen" genre="lectures">
 <seg id="1"> Mr Reichert , it is completely depressing that you announce me right after Jamie Oliver who had just finished talking about unhealthy diet , bad food and overweight people . </seg>
 <seg id="2"> But I'll try my best to wash away these impressions . </seg>
 <seg id="3"> Because I grew up on a Demeter farm and until I was twelve years old, I didn't know McDonald's . </seg>
@@ -1074,8 +1056,6 @@
 <seg id="233"> And if we then focus clearly on this objective and also reach it , this is the best proof that at least in one project in our life , we were able to trust . </seg>
 <seg id="234"> Because if you succeed in one area , you will definitely be able to do so in other areas . </seg>
 <seg id="235"> Thank you very much , thank you . </seg>
-</doc>
-<doc docid="Wissenschaft" genre="lectures">
 <seg id="1"> A science for me , that's the title of my talk that has been created after your beautiful cards got printed . </seg>
 <seg id="2"> What drives me is the deep wish to establish natural sciences in the everyday life of the general populace again . </seg>
 <seg id="3"> Actually , I could be satisfied . </seg>
@@ -1200,8 +1180,6 @@
 <seg id="122"> And then I think , yeah , okay , I'll call the next one then . </seg>
 <seg id="123"> But anyone who somehow works at an institute , who is electrical engineer in some company , whatever it is , the next break is coming up . </seg>
 <seg id="124"> Thank you very much . </seg>
-</doc>
-<doc docid="Zeppelin" genre="lectures">
 <seg id="1"> Am I crazy , that is the question . </seg>
 <seg id="2"> And you cannot fly every day , either . </seg>
 <seg id="3"> The last couple of weeks were awful . </seg>
@@ -1434,6 +1412,3 @@
 <seg id="230"> And I was the chief financial officer of Greenpeace for three years and now I am doing this here hoping to have a great future with Zeppelin . </seg>
 <seg id="231"> Zero , is it correct , forty seconds , I've nevertheless finished , thank you . </seg>
 <seg id="232"> Applause </seg>
-</doc>
-</refset>
-</mteval>

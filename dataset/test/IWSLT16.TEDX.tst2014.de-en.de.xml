@@ -1,12 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<mteval>
-<srcset setid="iwslt2016-TEDXtst2014" srclang="german">
-<doc docid="Disaster" genre="lectures">
-<url>NOURL</url>
-<description>NODESCRIPTION</description>
-<keywords>NOKEYWORDS</keywords>
-<talkid>Disaster</talkid>
-<title>NOTITLE</title>
 <seg id="1"> Ja, guten Tag meine Damen, meine Herren. </seg>
 <seg id="2"> ganz herzlichen Dank für die Einladung hier heute zu sprechen. </seg>
 <seg id="3"> und ich muss mich ja jetzt selber vorstellen. </seg>
@@ -122,13 +113,6 @@
 <seg id="113"> das zeigt, da ist noch viel zu tun, auch für die öffentliche Kommunikation im Katastrophenfall, aber die beispiellose Solidarität mit den Magdeburgern und dem Umland hat einfach gezeigt, dass die sozialen Medien aus einer Krisenkommunikation, aus einer kommunikation gar nicht mehr weg zu denken sind. </seg>
 <seg id="114"> und ich hoffe, dass ich sie ein bisschen davon überzeugt habe, dass dieses Medium, das ja eigentlich für die schönen Dinge des Lebens oftmals genutzt wird, auch in Krisensituationen seinen Sinn und Zweck erfüllt und das wir als Stadt, die für die für den Katastrophenschutz zuständig ist, dieses Instrument in Zukunft auch noch ganz neu und ganz anders ausbauen werden zu Ihren, zu den Bürger zum Nutzen der Bürgerinnen und Bürgern und damit ende ich jetzt und bedanke mich ganz herzlich für Ihre Aufmerksamkeit auch wenn ich Sie die gesamte Zeit kaum gesehen habe. </seg>
 <seg id="115"> Danke schön. </seg>
-</doc>
-<doc docid="Entertaining" genre="lectures">
-<url>NOURL</url>
-<description>NODESCRIPTION</description>
-<keywords>NOKEYWORDS</keywords>
-<talkid>Entertaining</talkid>
-<title>NOTITLE</title>
 <seg id="1"> so, einen wunderschönen guten Abend. </seg>
 <seg id="2"> ich bin Sharlene Anders. </seg>
 <seg id="3"> ich bin Schriftstellerin und Regisseurin, wie Sie gerade schon gehört haben. </seg>
@@ -276,13 +260,6 @@
 <seg id="145"> so, wenn jetzt jemand denkt: ich möchte unbedingt schon meinen Teil beitragen, ich hatte grad' eine Idee für'n Charakter oder ich hab' 'ne Zeichnung oder'n Cartoon oder was auch immer, das geht auch jetzt schon. </seg>
 <seg id="146"> man findet uns schon im Internet. </seg>
 <seg id="147"> auf Facebook. </seg>
-</doc>
-<doc docid="Erinnerungen" genre="lectures">
-<url>NOURL</url>
-<description>NODESCRIPTION</description>
-<keywords>NOKEYWORDS</keywords>
-<talkid>Erinnerungen</talkid>
-<title>NOTITLE</title>
 <seg id="1"> toll, wie frei die Redner sprechen. </seg>
 <seg id="2"> ja, find' ich auch. </seg>
 <seg id="3"> herzlich Willkommen zu: kann man Erinnerungen löschen? </seg>
@@ -411,13 +388,6 @@
 <seg id="126"> nein, ich glaube unser Gehirn hat so viel Kapazität, dass es alles speichern kann. </seg>
 <seg id="127"> 's macht aber nichts, weil wir können frei wählen, wie stark wir den Fokus und wie wichtig wir ein Ereignis, eine Erinnerung, einen Gedanken bewerten, es kommt auf uns an. </seg>
 <seg id="128"> mein Appell an Euch, an Sie, spielen Sie mit den Bildern in Ihrem Kopf, nutzen Sie die Macht Ihres Unterbewusstseins und geben Sie ihm jeden Tag Suggestionen, die Ihr Leben bereichern. </seg>
-</doc>
-<doc docid="Festival" genre="lectures">
-<url>NOURL</url>
-<description>NODESCRIPTION</description>
-<keywords>NOKEYWORDS</keywords>
-<talkid>Festival</talkid>
-<title>NOTITLE</title>
 <seg id="1"> ja guten Nachmittag. </seg>
 <seg id="2"> vielen Dank für die Einladung. </seg>
 <seg id="3"> wenn ich auf einer Party gefragt werde, was ich so in meiner Freizeit mache und erzähle, dass ich zusammen mit Freunden ein Musikfestival organisiere und veranstalte, dann sehe ich leuchtende Augen und in den Köpfen meiner Zuhörer die Assoziation von tanzenden Menschenmassen, Dixi-Klos, Zeltstädten und Schlammschlachten auftauchen. </seg>
@@ -488,13 +458,6 @@
 <seg id="68"> deswegen sind wir unglaublich glücklich darüber, dass in ganz Europa junge Musiker Musik in ihre eigene Hand nehmen und Zuhause bei sich in den Städten Podiumfestivals veranstalten. </seg>
 <seg id="69"> wenn Sie sich jetzt immer noch nicht so richtig vorstellen können, wie sich das anfühlt, klassische Musik so zu erleben, dann kommen Sie doch einfach vorbei. </seg>
 <seg id="70"> Anfang nächstes Jahr sind wir wieder in Esslingen und wir würden uns freuen, wenn Sie dann auch da sind. </seg>
-</doc>
-<doc docid="Kunst" genre="lectures">
-<url>NOURL</url>
-<description>NODESCRIPTION</description>
-<keywords>NOKEYWORDS</keywords>
-<talkid>Kunst</talkid>
-<title>NOTITLE</title>
 <seg id="1"> ja, meine Damen und Herren, Lernen. </seg>
 <seg id="2"> man denkt vielleicht Wissen erwerben. </seg>
 <seg id="3"> Wissen gehört dazu zum Lernen oder zum Effekt des Lernens, aber ich meine, zum Lernen gehört noch viel mehr, nämlich auch Erfah ren rungen sammeln und Urteilskraft gewinnen. </seg>
@@ -616,13 +579,6 @@
 <seg id="119"> und wenn wir viel erfinden und Erfindung zulassen, Inventionen, wenn wir es zulassen, dass wir uns inspirieren lassen von Kunst und Kultur, unsere eigene Position zu beziehen, im Dialog mit dem Kunstwerk, wenn wir interagieren und letztlich auch an unserer eigenen Identität immer wieder arbeiten, indem wir uns mit Kunst und Kultur befragen lassen, dann haben wir alle gewonnen </seg>
 <seg id="120"> und ich hoffe, dass Sie noch viele Kunst- und Kulturerlebnisse haben, aus denen Sie diesen Gewinn ziehen. </seg>
 <seg id="121"> vielen Dank. </seg>
-</doc>
-<doc docid="Sterben" genre="lectures">
-<url>NOURL</url>
-<description>NODESCRIPTION</description>
-<keywords>NOKEYWORDS</keywords>
-<talkid>Sterben</talkid>
-<title>NOTITLE</title>
 <seg id="1"> ja, vielen Dank. </seg>
 <seg id="2"> ich denke, wir warten auf das erste Bild eben. </seg>
 <seg id="3"> ich habe also zu meim zur Unterstützung meines Gedächtnisses hier so ein paar Folien hingemacht. </seg>
@@ -700,13 +656,6 @@
 <seg id="75"> und um solche Gespräche zu führen, braucht es eben Räume, und da denke ich, und darum habe ich diesen Vortrag so genannt, und hier vor bereitet, sind solche Räume wie das Kreuzeskirchenviertel in Essen, das habe ich Ihnen hier beides versucht, auf einem Bild mal näherzubringen, Räume, wo wir über solche Themen nachdenken müssen, wo ein geschützter Raum ist, sodass es nicht verletzend ist, dass es auch vielleicht nicht zu theoretisch ist, aber dass eben ein Gespräch dort stattfindet. </seg>
 <seg id="76"> damit wir, wenn wir dann alt sind, durchaus sagen können, ach ja, so ein Tanz in den Mai, trotz meines vielleicht sehr hohen Alters, das wäre noch mal was. </seg>
 <seg id="77"> ich danke Ihnen herzlich für Ihre Aufmerksamkeit. </seg>
-</doc>
-<doc docid="Unendlichkeit" genre="lectures">
-<url>NOURL</url>
-<description>NODESCRIPTION</description>
-<keywords>NOKEYWORDS</keywords>
-<talkid>Unendlichkeit</talkid>
-<title>NOTITLE</title>
 <seg id="1"> wunderschönen guten Abend. </seg>
 <seg id="2"> ich bringe zwei Sachen mit. </seg>
 <seg id="3"> wenn Ihnen der erste Teil zu flach ist, halten Sie sich ein bisschen wach.. </seg>
@@ -872,13 +821,6 @@
 <seg id="163"> ganz einfach, auch zwei Drittel sind nicht hundert Prozent: der Unterschied zwischen Theorie und Praxis. </seg>
 <seg id="164"> ich hoffe, es war für jeden was dabei. </seg>
 <seg id="165"> vielen Dank. </seg>
-</doc>
-<doc docid="Vertrauen" genre="lectures">
-<url>NOURL</url>
-<description>NODESCRIPTION</description>
-<keywords>NOKEYWORDS</keywords>
-<talkid>Vertrauen</talkid>
-<title>NOTITLE</title>
 <seg id="1"> Herr Reichert, dass Sie mich nach Jamie Oliver dranlassen, der hier gerade von schlechter Ernährung und schlechtem Essen und übergewichtigen Menschen berichtet hat, das deprimiert einen ja komplett. </seg>
 <seg id="2"> aber ich geb' mein Bestes, dass das nachher alles wieder weg ist, diese Eindrücke. </seg>
 <seg id="3"> ich komm' nämlich von Demeter Bauernhof und kannte bis ich zwölf war überhaupt kein McDonald's. </seg>
@@ -1114,13 +1056,6 @@
 <seg id="233"> und wenn wir dann dieses Ziel im Kopf klar vor Augen haben und das auch erreicht haben, dann ist das der beste Beweis, dass wir zumindest in einem Projekt in unserem Leben vertrauen konnten. </seg>
 <seg id="234"> und wenn man's einmal kann, kann man's auch definitiv in anderen Bereichen. </seg>
 <seg id="235"> herzlichen Dank </seg>
-</doc>
-<doc docid="Wissenschaft" genre="lectures">
-<url>NOURL</url>
-<description>NODESCRIPTION</description>
-<keywords>NOKEYWORDS</keywords>
-<talkid>Wissenschaft</talkid>
-<title>NOTITLE</title>
 <seg id="1"> eine Wissenschaft für mich, das ist der Titel meines Talks, der entstanden ist nach Drucklegung Ihrer schönen Karten. </seg>
 <seg id="2"> was mich antreibt, ist die die ganz tiefsitzende Bemühung, die Naturwissenschaften wieder als etwas Selbstverständliches in der allgemeinen Bevölkerung zu verankern. </seg>
 <seg id="3"> im Grunde genommen könnte ich zufrieden sein. </seg>
@@ -1245,13 +1180,6 @@
 <seg id="122"> ja, denke ich mir dann, okay, dann rufe ich den nächsten an. </seg>
 <seg id="123"> aber wer irgendwie in einem Institut arbeitet, Elektro-Ingenieur ist in einer Firma, wie auch immer, es gibt gleich die nächste Pause. </seg>
 <seg id="124"> vielen Dank. </seg>
-</doc>
-<doc docid="Zeppelin" genre="lectures">
-<url>NOURL</url>
-<description>NODESCRIPTION</description>
-<keywords>NOKEYWORDS</keywords>
-<talkid>Zeppelin</talkid>
-<title>NOTITLE</title>
 <seg id="1"> bin ich verrückt, ist die Frage. </seg>
 <seg id="2"> Fliegen kann man auch nicht jeden Tag. </seg>
 <seg id="3"> die letzten Wochen waren schrecklich. </seg>
@@ -1484,6 +1412,3 @@
 <seg id="230"> und ich habe drei Jahre lang Greenpeace geleitet als Finanzchef und jetzt mache ich das hier in der Hoffnung, eine lange Zukunft im Zeppelin zu erreichen. </seg>
 <seg id="231"> null, stimmt das? vierzig Sekunden, ich bin trotzdem fertig, Danke. </seg>
 <seg id="232"> applause </seg>
-</doc>
-</srcset>
-</mteval>
