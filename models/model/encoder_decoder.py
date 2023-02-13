@@ -42,7 +42,7 @@ class LayerNorm(nn.Module):
         mean = x.mean(-1, keepdim = True)
         std = x.std(-1, keepdim = True)
         out = self.gamma * (x-mean)/(std+self.eps) + self.beta
-        return out,
+        return out
     
     
 '''
@@ -109,7 +109,6 @@ class Decoder(nn.Module):
 
     def forward(self, trg, encoder_out, trg_mask, src_tgt_mask):
         out = trg
-        import pdb;pdb.set_trace()
         for layer in self.layers:
             out = layer(out, encoder_out, trg_mask, src_tgt_mask)
         out = self.norm(out)

@@ -17,15 +17,16 @@ def train(model, data_loader, optimizer, criterion, epoch, checkpoint_dir):
     for idx, (src, trg) in enumerate(tqdm(data_loader)):
         src = src.to(model.device)
         trg = trg.to(model.device)
-        trg_x = trg[:, :-1]
+        trg_x = trg[:, :-1] # 이상한 부분입니다.
         trg_y = trg[:, 1:]
 
         optimizer.zero_grad()
 
         output, _ = model(src, trg_x)
-        
-        y_hat = output.contiguous().view(-1, output.shape[-1])
+        y_hat = output.contiguous().view(-1, output.shape[-1]).type(torch.float32)
         y_gt = trg_y.contiguous().view(-1)
+        y_gt = y_gt.to(device=DEVICE, dtype=torch.float32) # GPU로 data 복사 및 dtype 변경
+        import pdb;pdb.set_trace()
         loss = criterion(y_hat, y_gt)
         loss.backward()
         nn.utils.clip_grad_norm_(model.parameters(), 1.0)
@@ -63,6 +64,7 @@ def evaluate(model, data_loader, criterion):
 
             y_hat = output.contiguous().view(-1, output.shape[-1])
             y_gt = trg_y.contiguous().view(-1)
+            y_gt = y_gt.to(device=DEVICE, dtype=torch.float32)  # GPU로 data 복사 및 dtype 변경
             loss = criterion(y_hat, y_gt)
 
             epoch_loss += loss.item()
@@ -100,7 +102,7 @@ def main():
             scheduler.step(dev_loss)
         logging.info(f"dev_loss: {dev_loss:.5f}, bleu_score: {bleu_score:.5f}")
 
-        # logging.info(DATASET.translate(model, "A little girl climbing into a wooden playhouse .", greedy_decode))
+        # logging.info(DATASET.translate(model, "A little girl climbing into a wooden playhouse.", greedy_decode))
         # # expected output: "Ein kleines Mädchen klettert in ein Spielhaus aus Holz ."
 
     test_loss, bleu_score = evaluate(model, test_iter, criterion)
