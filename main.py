@@ -10,7 +10,7 @@ from Dataloader import *
 from utils import get_bleu_score, greedy_decode
 
 DATASET = CustomDataset()
-
+DEVICE = torch.device('cpu')
 def train(model, data_loader, optimizer, criterion, epoch, checkpoint_dir):
     model.train()
     epoch_loss = 0
