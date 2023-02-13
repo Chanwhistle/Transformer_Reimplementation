@@ -37,8 +37,8 @@ class PositionalEncoding(nn.Module):
 
     def forward(self, x):
         # x.shape : (batch, seq_len) or (batch, seq_len, d_model)
-        seq_len = x.size()[1] 
+        batch, seq_len, d_model = x.size()
         
         # return : (seq_len, d_model)
         # return matrix will be added to x by broadcasting
-        return self.encoding[:seq_len, :]
+        return x + self.encoding[:seq_len, :]

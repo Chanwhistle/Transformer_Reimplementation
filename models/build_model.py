@@ -14,7 +14,7 @@ def build_model(src_vocab_size,
                 device = torch.device("cuda:0"),
                 max_len = 5000,
                 n_layer = 6,
-                d_embed = 1024,
+                d_embed = 512,
                 d_model = 512,
                 n_head = 8,
                 hidden_layer = 2048,
@@ -37,10 +37,12 @@ def build_model(src_vocab_size,
 
     src_embed = TransformerEmbedding(
                                      token_embed = src_token_embed,
-                                     pos_embed = copy(pos_embed))
+                                     pos_embed = copy(pos_embed),
+                                     drop_prob = drop_prob)
     trg_embed = TransformerEmbedding(
                                      token_embed = trg_token_embed,
-                                     pos_embed = copy(pos_embed))
+                                     pos_embed = copy(pos_embed),
+                                     drop_prob = drop_prob)
 
     attention = MultiHeadAttention(
                                     d_embed = d_embed,

@@ -15,8 +15,9 @@ class PositionwiseFeedForward(nn.Module):
         self.dropout = nn.Dropout(p=drop_prob)
         
     def forward(self, x):
-        x = self.linear1(x)
-        x = self.relu(x)
-        x = self.dropout(x)
-        x = self.linear2(x)
-        return x
+        out = x
+        out = self.linear1(out)
+        out = self.relu(out)
+        out = self.dropout(out)
+        out = self.linear2(out)
+        return out

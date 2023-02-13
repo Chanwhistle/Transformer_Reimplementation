@@ -88,9 +88,9 @@ class EncoderLayer(nn.Module):
         
     def forward(self, src, src_mask):
         out = src
-        out = self.self_attn(query=out, key=out, value=out, mask=src_mask)
+        out = self.self_attn(query=out, key=out, value=out, mask=src_mask)[0] # (out, attn_prob) 으로 반환
         out = self.feed_forward(out)
-        return out     
+        return out
     
     
 '''
@@ -109,8 +109,9 @@ class Decoder(nn.Module):
 
     def forward(self, trg, encoder_out, trg_mask, src_tgt_mask):
         out = trg
+        import pdb;pdb.set_trace()
         for layer in self.layers:
-            trg = layer(out, encoder_out, trg_mask, src_tgt_mask)
+            out = layer(out, encoder_out, trg_mask, src_tgt_mask)
         out = self.norm(out)
         return out
 
@@ -125,10 +126,10 @@ class DecoderLayer(nn.Module):
         self.feed_forward = feed_forward
         self.sublayer = clones(SublayerConnection(size, drop_prob, eps), self.n_layers)
         
-    def forward(self, trg, encoder_out, trg_mask, src_tgt_mask):
+    def forward(self, trg, encoder_out, trg_mask, src_trg_mask):
         out = trg
-        out = self.self_attn(query=out, key=out, value=out, mask=trg_mask)
-        out = self.cross_attn(query=out, key=encoder_out, value=encoder_out, mask=src_tgt_mask)
+        out = self.self_attn(query=out, key=out, value=out, mask=trg_mask)[0]
+        out = self.cross_attn(query=out, key=encoder_out, value=encoder_out, mask=src_trg_mask)[0]
         out = self.feed_forward(out)
         return out   
     

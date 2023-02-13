@@ -17,7 +17,7 @@ class ScaleDotProductAttention(nn.Module):
     '''     
     def __init__(self):   
         super(ScaleDotProductAttention, self).__init__()  # reset nn.Module
-        self.softmax = nn.Softmax()
+        self.softmax = nn.Softmax(dim = 1)
     
     def forward(self, query, key, value, mask = None, e = 1e-12):
         # input = 4 dimention tensor [batch_size, n_head, length, d_tensor]
@@ -50,11 +50,34 @@ class MultiHeadAttention(nn.Module):
         super(MultiHeadAttention, self).__init__()
         self.d_embed = d_embed
         self.n_head = n_head
+        self.attention = ScaleDotProductAttention()
         self.w_query = nn.Linear(d_embed, d_model)
         self.w_key = nn.Linear(d_embed, d_model)
         self.w_value = nn.Linear(d_embed, d_model)
         self.w_concat = nn.Linear(d_model, d_embed)
-        self.attention = ScaleDotProductAttention()
+        
+    def forward(self, query, key, value, mask = None):
+        '''
+        query, key, value: (n_batch, length, d_model)
+        mask: (n_batch, length, length)
+        return value: (n_batch, length, d_model)
+        '''
+        # 1. dot product with weight matrix
+        query, key ,value = self.w_query(query), self.w_key(key), self.w_value(value)
+        
+        # 2. split tensor by number of heads
+        query, key ,value = self.split(query), self.split(key), self.split(value)
+        
+        # 3. calculate scale dot product to compute similarity
+        out, attn_prob = self.attention(query, key ,value, mask = mask)
+        
+        # 4. concat and pass to linear layer
+        out = self.concat(out)
+        out = self.w_concat(out)
+        
+        # 5. visualize attention map
+        # Todo : visualization
+        return out, attn_prob
         
     def split(self, tensor):
         '''
@@ -67,7 +90,6 @@ class MultiHeadAttention(nn.Module):
         batch_size, length, d_embed = tensor.size()
         d_tensor = d_embed//self.n_head
         tensor = tensor.reshape(batch_size, self.n_head, length, d_tensor)
-        import pdb;pdb.set_trace()
         return tensor
     
     def concat(self, tensor):
@@ -81,16 +103,5 @@ class MultiHeadAttention(nn.Module):
         tensor = tensor.reshape(batch_size, length, self.n_head*d_tensor)
         return tensor
     
-    def forward(self, query, key, value, mask = None):
-        '''
-        query, key, value: (n_batch, length, d_model)
-        mask: (n_batch, length, length)
-        return value: (n_batch, length, d_model)
-        '''
-        query, key ,value = self.w_query(query), self.w_key(key), self.w_value(value)
-        query, key ,value = self.split(query), self.split(key), self.split(value)     
-        out, attn_prob = self.attention(query, key ,value, mask = mask)
-        out = self.concat(out)
-        out = self.w_concat(out)
-        return out, attn_prob
+
     

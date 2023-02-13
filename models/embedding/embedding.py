@@ -8,7 +8,7 @@ Token Embedding
 class TokenEmbedding(nn.Module):
     def __init__(self, vocab_size, d_embed):
         super(TokenEmbedding, self).__init__()
-        self.embedding = nn.Embedding(vocab_size, d_embed)
+        self.embedding = nn.Embedding(vocab_size, d_embed, padding_idx=1)
         self.d_embed = d_embed
 
     def forward(self, x):
@@ -19,7 +19,7 @@ class TokenEmbedding(nn.Module):
 Transformer Embedding
 '''
 class TransformerEmbedding(nn.Module):
-    def __init__(self, token_embed, pos_embed, drop_prob = 0):
+    def __init__(self, token_embed, pos_embed, drop_prob):
         super(TransformerEmbedding, self).__init__()
         self.embedding = nn.Sequential(token_embed, pos_embed)
         self.dropout = nn.Dropout(p = drop_prob)

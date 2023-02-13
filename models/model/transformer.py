@@ -29,7 +29,11 @@ class Transformer(nn.Module):
         trg_mask = self.make_trg_mask(trg)
         src_trg_mask = self.make_src_trg_mask(src, trg)
         encoder_out = self.encode(src, src_mask)
+        
+        import pdb;pdb.set_trace()
         decoder_out = self.decode(trg, encoder_out, trg_mask, src_trg_mask)
+        
+        import pdb;pdb.set_trace()
         out = F.log_softmax(self.generator(decoder_out), dim=-1)
         return out, decoder_out
 

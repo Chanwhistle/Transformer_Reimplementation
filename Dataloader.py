@@ -93,7 +93,8 @@ class CustomDataset(Dataset):
         tokenized_src = []      
         trg_model = self.tokenizer(f"{self.trg_lang}_32000")
         src_model = self.tokenizer(f"{self.src_lang}_32000")
-        if not os.path.isfile(f'./Tokenizer/EncodeAsIds_{type}.pickle'):
+        EncodeAsIds_file = f'./Tokenizer/EncodeAsIds_{type}.pickle'
+        if not os.path.isfile(EncodeAsIds_file):
             print("Encoding As Id...") 
             for src, trg in tqdm(vocab):       
                 tok_tmp_trg = trg_model.EncodeAsIds(trg); tok_tmp_trg.insert(0,self.bos_idx); tok_tmp_trg.append(self.eos_idx) 
@@ -102,13 +103,11 @@ class CustomDataset(Dataset):
                 tokenized_src.append(tok_tmp_src)
             assert(len(tokenized_trg) == len(tokenized_src)), "Vocab size is different!!"
             tok_trg_src =[(en, de) for en, de in zip(self.to_tensor(tokenized_trg), self.to_tensor(tokenized_src))]
-            with open(f'./Tokenizer/EncodeAsIds_{type}.pickle', 'wb') as f:
-                pickle.dump(tok_trg_src, f, pickle.HIGHEST_PROTOCOL)            
+            save_pkl(tok_trg_src, EncodeAsIds_file)          
         
         else:                
-            print(f"Loading Encoded file!")
-            with open(f'./Tokenizer/EncodeAsIds_{type}.pickle', 'rb') as f:
-                tok_trg_src = pickle.load(f)
+            print(f"Loading Encoded {type} file!")
+            tok_trg_src = load_pkl(EncodeAsIds_file)
         
         return tok_trg_src
 

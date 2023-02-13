@@ -23,6 +23,7 @@ def train(model, data_loader, optimizer, criterion, epoch, checkpoint_dir):
         optimizer.zero_grad()
 
         output, _ = model(src, trg_x)
+        
         y_hat = output.contiguous().view(-1, output.shape[-1])
         y_gt = trg_y.contiguous().view(-1)
         loss = criterion(y_hat, y_gt)
