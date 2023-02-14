@@ -11,7 +11,7 @@ from models.layers.positionwise_feed_forward_layer import *
 
 def build_model(src_vocab_size,
                 trg_vocab_size,
-                device = torch.device("cuda:0"),
+                device = torch.device("cuda"),
                 max_len = 5000,
                 n_layer = 6,
                 d_embed = 512,
