@@ -70,7 +70,7 @@ def evaluate(model, data_loader, criterion):
             loss = criterion(y_hat, y_gt)
 
             epoch_loss += loss.item()
-            score = get_bleu_score(output, trg_y, DATASET.trg_vocab, DATASET.specials)
+            score = get_bleu_score(output, trg_y, DATASET.vocab_trg, DATASET.specials)
             total_bleu.append(score)
         num_samples = idx + 1
 
