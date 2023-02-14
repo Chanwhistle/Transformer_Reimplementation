@@ -10,23 +10,25 @@ from Dataloader import *
 from utils import get_bleu_score, greedy_decode
 
 DATASET = CustomDataset()
-DEVICE = torch.device('cpu')
+
 def train(model, data_loader, optimizer, criterion, epoch, checkpoint_dir):
     model.train()
     epoch_loss = 0
     for idx, (src, trg) in enumerate(tqdm(data_loader)):
         src = src.to(model.device)
         trg = trg.to(model.device)
-        trg_x = trg[:, :-1] # 이상한 부분입니다.
+        trg_x = trg[:, :-1]
         trg_y = trg[:, 1:]
 
         optimizer.zero_grad()
 
         output, _ = model(src, trg_x)
-        y_hat = output.contiguous().view(-1, output.shape[-1]).type(torch.float32)
+        y_hat = output.contiguous().view(-1, output.shape[-1])
         y_gt = trg_y.contiguous().view(-1)
-        y_gt = y_gt.to(device=DEVICE, dtype=torch.float32) # GPU로 data 복사 및 dtype 변경
-        import pdb;pdb.set_trace()
+        y_gt = y_gt.to(device=DEVICE, dtype=torch.long) # GPU로 data 복사 및 dtype 변경
+        '''
+        y_gt는 long tensor로 들어가고 y_hat은 float.64로 들어가야 함
+        '''
         loss = criterion(y_hat, y_gt)
         loss.backward()
         nn.utils.clip_grad_norm_(model.parameters(), 1.0)
@@ -64,7 +66,7 @@ def evaluate(model, data_loader, criterion):
 
             y_hat = output.contiguous().view(-1, output.shape[-1])
             y_gt = trg_y.contiguous().view(-1)
-            y_gt = y_gt.to(device=DEVICE, dtype=torch.float32)  # GPU로 data 복사 및 dtype 변경
+            y_gt = y_gt.to(device=DEVICE, dtype=torch.long)  # GPU로 data 복사 및 dtype 변경
             loss = criterion(y_hat, y_gt)
 
             epoch_loss += loss.item()
