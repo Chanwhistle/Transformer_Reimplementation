@@ -1,6 +1,6 @@
 import torch
 
-DEVICE = torch.device('cuda:0')
+DEVICE = torch.device('cuda')
 CHECKPOINT_DIR = "./checkpoint"
 N_EPOCH = 1000
 BATCH_SIZE = 32
