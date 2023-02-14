@@ -14,7 +14,7 @@ class PositionalEncoding(nn.Module):
         parameter
         - d_model : dimention of model
         - max_len : max length of input sequence
-        - device : cuda or cpu
+        - device : cuda
         '''
         super(PositionalEncoding, self).__init__() # reset nn.Module
         
