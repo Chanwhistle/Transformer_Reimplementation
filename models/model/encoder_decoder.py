@@ -6,7 +6,7 @@ import torch.nn as nn
 Sublayer Connection
 '''
 
-class SublayerConnection(nn.Module):
+class SublayerConnection(nn.Module):   
     """
     A residual connection followed by a layer norm.
     Note for code simplicity the norm is first as opposed to last.
@@ -128,7 +128,8 @@ class DecoderLayer(nn.Module):
     def forward(self, trg, encoder_out, trg_mask, src_trg_mask):
         out = trg
         out = self.self_attn(query=out, key=out, value=out, mask=trg_mask)[0]
-        out = self.cross_attn(query=out, key=encoder_out, value=encoder_out, mask=src_trg_mask)[0]
+        out = self.cross_attn(query=out, key=encoder_out, value=encoder_out, mask=src_trg_mask)[0] 
+        # out은 sentence, encoder out 은 context
         out = self.feed_forward(out)
         return out   
     
