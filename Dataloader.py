@@ -90,7 +90,7 @@ class CustomDataset(Dataset):
 
     def tokenize(self, vocab, type):
         tokenized_trg = []
-        tokenized_src = []      
+        tokenized_src = []
         trg_model = self.tokenizer(f"{self.trg_lang}_32000")
         src_model = self.tokenizer(f"{self.src_lang}_32000")
         EncodeAsIds_file = f'./Tokenizer/EncodeAsIds_{type}.pickle'
@@ -222,3 +222,14 @@ class CustomDataset(Dataset):
                                **kwargs)
         return train_iter, dev_iter, test_iter
     
+    # def translate(self, model, src_sentence: str, decode_func):
+    #     model.eval()
+    #     src = self.transform_src([self.tokenizer_src(src_sentence)]).view(1, -1)
+    #     num_tokens = src.shape[1]
+    #     tgt_tokens = decode_func(model,
+    #                              src,
+    #                              max_len=num_tokens+5,
+    #                              start_symbol=self.sos_idx,
+    #                              end_symbol=self.eos_idx).flatten().cpu().numpy()
+    #     tgt_sentence = " ".join(self.vocab_tgt.lookup_tokens(tgt_tokens))
+    #     return tgt_sentence
