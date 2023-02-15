@@ -1,13 +1,12 @@
 import os, sys, time
 import logging
-
 import torch
 from torch import nn, optim
-
 from config import *
 from models.build_model import build_model
 from Dataloader import *
 from utils import get_bleu_score, greedy_decode
+from torchtext.vocab import *
 
 DATASET = CustomDataset()
 
@@ -104,8 +103,8 @@ def main():
             scheduler.step(dev_loss)
         logging.info(f"dev_loss: {dev_loss:.5f}, bleu_score: {bleu_score:.5f}")
 
-        # logging.info(DATASET.translate(model, "A little girl climbing into a wooden playhouse.", greedy_decode))
-        # # expected output: "Ein kleines Mädchen klettert in ein Spielhaus aus Holz ."
+    # logging.info(DATASET.translate(model, "Ein kleines Mädchen klettert in ein Spielhaus aus Holz.", greedy_decode))
+    # # expected output: "A little girl climbing into a wooden playhouse."
 
     test_loss, bleu_score = evaluate(model, test_iter, criterion)
     logging.info(f"test_loss: {test_loss:.5f}, bleu_score: {bleu_score:.5f}")
