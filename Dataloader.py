@@ -128,9 +128,9 @@ class CustomDataset(Dataset):
         
         for corpus in corpus_dict.get(type):
             trg_path = os.path.join(self.data_path, type, 
-                                    f"{corpus}.{self.src_lang}-{self.trg_lang}.{self.trg_lang}.xml")
+                                    f"{corpus}.{self.src_lang}-{self.trg_lang}.{self.trg_lang}.txt")
             src_path = os.path.join(self.data_path, type, 
-                                    f"{corpus}.{self.src_lang}-{self.trg_lang}.{self.src_lang}.xml")
+                                    f"{corpus}.{self.src_lang}-{self.trg_lang}.{self.src_lang}.txt")
             with open(trg_path, encoding = "utf-8") as f:
                 temp_trg = f.read().splitlines()
             with open(src_path, encoding = "utf-8") as f:
@@ -160,7 +160,7 @@ class CustomDataset(Dataset):
             if not os.path.isdir(save_dir):
                 os.mkdir(save_dir)
             model_path_en = os.path.join(save_dir, model_name)
-            data4vocab = os.path.join(dataset_dir, f"{corpus}.{self.src_lang}-{self.trg_lang}.{self.trg_lang}.xml")
+            data4vocab = os.path.join(dataset_dir, f"{corpus}.de-en.{lang}.txt")
             input_argument = ' '.join(['--input=%s',
                                        '--model_prefix=%s',
                                        '--vocab_size=%s',
@@ -221,14 +221,3 @@ class CustomDataset(Dataset):
                                **kwargs)
         return train_iter, dev_iter, test_iter
     
-    # def translate(self, model, src_sentence: str, decode_func):
-    #     model.eval()
-    #     src = self.transform_src([self.tokenizer_src(src_sentence)]).view(1, -1)
-    #     num_tokens = src.shape[1]
-    #     tgt_tokens = decode_func(model,
-    #                              src,
-    #                              max_len=num_tokens+5,
-    #                              start_symbol=self.sos_idx,
-    #                              end_symbol=self.eos_idx).flatten().cpu().numpy()
-    #     tgt_sentence = " ".join(self.vocab_tgt.lookup_tokens(tgt_tokens))
-    #     return tgt_sentence
