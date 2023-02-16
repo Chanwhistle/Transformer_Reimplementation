@@ -5,7 +5,7 @@ from torch import nn, optim
 from config import *
 from models.build_model import build_model
 from Dataloader import *
-from utils import get_bleu_score, greedy_decode
+from utils import get_bleu_score
 from torchtext.vocab import *
 
 DATASET = CustomDataset()
@@ -13,15 +13,17 @@ DATASET = CustomDataset()
 def train(model, data_loader, optimizer, criterion, epoch, checkpoint_dir):
     model.train()
     epoch_loss = 0
+    
     for idx, (src, trg) in enumerate(tqdm(data_loader)):
+        
         src = src.to(model.device)
         trg = trg.to(model.device)
         trg_x = trg[:, :-1]
         trg_y = trg[:, 1:]
 
         optimizer.zero_grad()
-
         output, _ = model(src, trg_x)
+        
         y_hat = output.contiguous().view(-1, output.shape[-1])
         y_gt = trg_y.contiguous().view(-1)
         y_gt = y_gt.to(device=DEVICE, dtype=torch.long) # GPU로 data 복사 및 dtype 변경
@@ -52,24 +54,25 @@ def train(model, data_loader, optimizer, criterion, epoch, checkpoint_dir):
 def evaluate(model, data_loader, criterion):
     model.eval()
     epoch_loss = 0
-
+    
     total_bleu = []
     with torch.no_grad():
         for idx, (src, trg) in enumerate(tqdm(data_loader)):
+            
             src = src.to(model.device)
             trg = trg.to(model.device)
             trg_x = trg[:, :-1]
-            trg_y = trg[:, 1:]
-
+            trg_y = trg[:, 1:]  
+            
             output, _ = model(src, trg_x)
-
+            
             y_hat = output.contiguous().view(-1, output.shape[-1])
             y_gt = trg_y.contiguous().view(-1)
             y_gt = y_gt.to(device=DEVICE, dtype=torch.long)  # GPU로 data 복사 및 dtype 변경
             loss = criterion(y_hat, y_gt)
 
             epoch_loss += loss.item()
-            score = get_bleu_score(output, trg_y, DATASET.vocab_trg, DATASET.specials)
+            score = get_bleu_score(output, trg_y, DATASET.specials)
             total_bleu.append(score)
         num_samples = idx + 1
 
@@ -92,19 +95,17 @@ def main():
 
     criterion = nn.CrossEntropyLoss(ignore_index=DATASET.pad_idx)
 
-    train_iter, dev_iter, test_iter = DATASET.get_iter(batch_size=BATCH_SIZE, num_workers=NUM_WORKERS)
+    train_iter, dev_iter, test_iter = DATASET.get_iter(batch_size=BATCH_SIZE, num_workers=NUM_WORKERS, shuffle= False)
 
     for epoch in range(N_EPOCH):
-        logging.info(f"* * * * * epoch: {epoch:03} * * * * *")
+        logging.info(f"* * * * * epoch: {epoch:02} * * * * *")
         train_loss = train(model, train_iter, optimizer, criterion, epoch, CHECKPOINT_DIR)
         logging.info(f"train_loss: {train_loss:.5f}")
         dev_loss, bleu_score  = evaluate(model, dev_iter, criterion)
+        print(dev_loss)
         if epoch > WARM_UP_STEP:
             scheduler.step(dev_loss)
         logging.info(f"dev_loss: {dev_loss:.5f}, bleu_score: {bleu_score:.5f}")
-
-    # logging.info(DATASET.translate(model, "Ein kleines Mädchen klettert in ein Spielhaus aus Holz.", greedy_decode))
-    # # expected output: "A little girl climbing into a wooden playhouse."
 
     test_loss, bleu_score = evaluate(model, test_iter, criterion)
     logging.info(f"test_loss: {test_loss:.5f}, bleu_score: {bleu_score:.5f}")
