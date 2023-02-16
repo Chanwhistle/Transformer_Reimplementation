@@ -6,7 +6,6 @@ from torch.utils.data import Dataset, DataLoader
 from torch.nn.utils.rnn import pad_sequence
 import sentencepiece as sp
 from tqdm import tqdm
-import pickle
 from utils import *
 
 class CustomDataset(Dataset):
@@ -72,7 +71,7 @@ class CustomDataset(Dataset):
             self.vocab_trg = f.read().splitlines()
         with open("./Tokenizer/vocab/de_32000/de_32000.vocab", encoding = "utf-8") as f:               
             self.vocab_src = f.read().splitlines()
-    
+                
 
     def __len__(self):
 
