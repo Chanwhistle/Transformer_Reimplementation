@@ -25,12 +25,12 @@ class Transformer(nn.Module):
 
 
     def forward(self, src, trg):
-        src_mask = self.make_src_mask(src)
-        trg_mask = self.make_trg_mask(trg)
-        src_trg_mask = self.make_src_trg_mask(src, trg)
-        encoder_out = self.encode(src, src_mask)
-        decoder_out = self.decode(trg, encoder_out, trg_mask, src_trg_mask)
-        out = F.log_softmax(self.generator(decoder_out), dim=-1)
+        src_mask = self.make_src_mask(src)                                      # src.size() = (n_batch, src_key_seq_len)
+        trg_mask = self.make_trg_mask(trg)                                      # trg.size() = (n_batch, trg_key_seq_len)
+        src_trg_mask = self.make_src_trg_mask(src, trg)                         # src_trg_mask.size() = (n_batch, 1, trg_key_seq_len, src_key_seq_len)
+        encoder_out = self.encode(src, src_mask)                                # encoder_out.size() = (n_batch, src_key_seq_len, d_embed)
+        decoder_out = self.decode(trg, encoder_out, trg_mask, src_trg_mask)     # decoder_out.size() = (n_batch, trg_key_seq_len, d_embed)
+        out = F.log_softmax(self.generator(decoder_out), dim=-1)                # out.size() = (n_batch, trg_key_seq_len, trg_vocab_size)
         return out, decoder_out
 
 
