@@ -1,7 +1,7 @@
 import pickle
 import torch
 from torchtext.data.metrics import bleu_score
-from torchtext.vocab import *
+import sentencepiece as sp
 
 def save_pkl(data, filename):
     with open(filename, "wb") as f:
@@ -14,18 +14,19 @@ def load_pkl(filename):
     return data
 
 
-def get_bleu_score(output, gt, vocab, specials, max_n=4):
-
-    def itos(x):
-        x = list(x.cpu().numpy())
-        tokens = vocab.lookup_tokens(x)
+def get_bleu_score(output, gt, specials, max_n=4):
+    spp = sp.SentencePieceProcessor()
+    vocab_file = "./Tokenizer/vocab/de_32000/de_32000.model"
+    spp.load(vocab_file)
+    
+    def itos(x):                 
+        x = list(map(int, list(x.cpu().numpy())))  
+        tokens = spp.DecodeIds(x)
         tokens = list(filter(lambda x: x not in {",", " ", "."} and x not in list(specials.keys()), tokens))
         return tokens
 
     pred = [out.max(dim=1)[1] for out in output]
-    import pdb;pdb.set_trace()
     pred_str = list(map(itos, pred))
-    import pdb;pdb.set_trace()
     gt_str = list(map(lambda x: [itos(x)], gt))
 
     score = bleu_score(pred_str, gt_str, max_n=max_n) * 100
