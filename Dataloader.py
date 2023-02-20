@@ -220,4 +220,15 @@ class CustomDataset(Dataset):
                                collate_fn=self.my_collate_fn,
                                **kwargs)
         return train_iter, dev_iter, test_iter
-    
+
+    def translate(self, model, src_sentence: str, decode_func):
+        model.eval()
+        src = self.transform_src([self.tokenizer_src(src_sentence)]).view(1, -1)
+        num_tokens = src.shape[1]
+        trg_tokens = decode_func(model,
+                                 src,
+                                 max_len=num_tokens+5,
+                                 start_symbol=self.sos_idx,
+                                 end_symbol=self.eos_idx).flatten().cpu().numpy()
+        trg_sentence = " ".join(self.vocab_trg.lookup_tokens(trg_tokens))
+        return trg_sentence
