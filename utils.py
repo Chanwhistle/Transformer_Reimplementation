@@ -16,19 +16,19 @@ def load_pkl(filename):
 
 def get_bleu_score(output, gt, specials, max_n=4):
     spp = sp.SentencePieceProcessor()
-    vocab_file = "./Tokenizer/vocab/de_32000/de_32000.model"
+    vocab_file = "./Tokenizer/vocab/en_32000/en_32000.model"
     spp.load(vocab_file)
     
     def itos(x):                 
-        x = list(map(int, list(x.cpu().numpy())))  
-        tokens = spp.DecodeIds(x)
-        tokens = list(filter(lambda x: x not in {",", " ", "."} and x not in list(specials.keys()), tokens))
+        xs = x.tolist()
+        indexs = [x for x in xs if x not in specials]
+        tokens = spp.DecodeIdsWithCheck(indexs)
         return tokens
-
-    pred = [out.max(dim=1)[1] for out in output]
-    pred_str = list(map(itos, pred))
-    gt_str = list(map(lambda x: [itos(x)], gt))
-
+    
+    pred = torch.stack([out.max(dim=-1)[1] for out in output], dim=0)
+    pred_str = itos(pred)
+    gt_str = itos(gt)
+    
     score = bleu_score(pred_str, gt_str, max_n=max_n) * 100
     return  score
 
@@ -41,9 +41,9 @@ def greedy_decode(model, src, max_len, start_symbol, end_symbol):
     ys = torch.ones(1, 1).fill_(start_symbol).type(torch.long).to(model.device)
     for i in range(max_len-1):
         memory = memory.to(model.device)
-        tgt_mask = model.make_tgt_mask(ys).to(model.device)
-        src_tgt_mask = model.make_src_tgt_mask(src, ys).to(model.device)
-        out = model.decode(ys, memory, tgt_mask, src_tgt_mask)
+        trg_mask = model.make_trg_mask(ys).to(model.device)
+        src_trg_mask = model.make_src_trg_mask(src, ys).to(model.device)
+        out = model.decode(ys, memory, trg_mask, src_trg_mask)
         prob = model.generator(out[:, -1])
         _, next_word = torch.max(prob, dim=1)
         next_word = next_word.item()
